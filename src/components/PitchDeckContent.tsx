@@ -66,12 +66,19 @@ const PitchDeckContent = () => {
 </body>
 </html>`;
 
+  // Extract style content from the HTML string
+  const styleContentMatch = htmlContent.match(/<style>([\s\S]*?)<\/style>/i);
+  const styleToRender = styleContentMatch ? styleContentMatch[1] : '';
+
   // Extract content within the <body> tags
   const bodyContentMatch = htmlContent.match(/<body>([\s\S]*?)<\/body>/i);
   const contentToRender = bodyContentMatch ? bodyContentMatch[1] : htmlContent;
 
   return (
     <div className="pitch-deck-container p-4 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
+      {/* Render the extracted styles */}
+      {styleToRender && <style dangerouslySetInnerHTML={{ __html: styleToRender }} />}
+      {/* Render the extracted body content */}
       <div dangerouslySetInnerHTML={{ __html: contentToRender }} />
     </div>
   );
