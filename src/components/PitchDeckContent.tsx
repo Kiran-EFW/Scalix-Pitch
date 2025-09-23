@@ -1,11 +1,10 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const PitchDeckContent = () => {
-  // The HTML content from your attached file.
-  // Note: Using dangerouslySetInnerHTML is powerful but can expose you to XSS attacks
-  // if the HTML content is not trusted. For a pitch deck you control, it's generally fine.
   const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,20 +65,63 @@ const PitchDeckContent = () => {
 </body>
 </html>`;
 
-  // Extract style content from the HTML string
-  const styleContentMatch = htmlContent.match(/<style>([\s\S]*?)<\/style>/i);
-  const styleToRender = styleContentMatch ? styleContentMatch[1] : '';
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [slides, setSlides] = useState<string[]>([]);
+  const [styleToRender, setStyleToRender] = useState('');
 
-  // Extract content within the <body> tags
-  const bodyContentMatch = htmlContent.match(/<body>([\s\S]*?)<\/body>/i);
-  const contentToRender = bodyContentMatch ? bodyContentMatch[1] : htmlContent;
+  useEffect(() => {
+    // Extract style content from the HTML string
+    const styleContentMatch = htmlContent.match(/<style>([\s\S]*?)<\/style>/i);
+    if (styleContentMatch) {
+      setStyleToRender(styleContentMatch[1]);
+    }
+
+    // Extract content within the <body> tags
+    const bodyContentMatch = htmlContent.match(/<body>([\s\S]*?)<\/body>/i);
+    const contentToParse = bodyContentMatch ? bodyContentMatch[1] : htmlContent;
+
+    // Create a temporary div to parse the HTML and extract slides
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = contentToParse;
+    const extractedSlides = Array.from(tempDiv.querySelectorAll('.slide')).map(
+      (slide) => slide.outerHTML
+    );
+    setSlides(extractedSlides.length > 0 ? extractedSlides : [contentToParse]); // Fallback if no .slide found
+  }, [htmlContent]);
+
+  const goToNextSlide = () => {
+    setCurrentSlideIndex((prevIndex) => Math.min(prevIndex + 1, slides.length - 1));
+  };
+
+  const goToPreviousSlide = () => {
+    setCurrentSlideIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
 
   return (
     <div className="pitch-deck-container p-4 max-w-4xl mx-auto bg-white shadow-lg rounded-lg">
       {/* Render the extracted styles */}
       {styleToRender && <style dangerouslySetInnerHTML={{ __html: styleToRender }} />}
-      {/* Render the extracted body content */}
-      <div dangerouslySetInnerHTML={{ __html: contentToRender }} />
+
+      {slides.length > 0 ? (
+        <>
+          <div className="relative min-h-[400px] flex items-center justify-center">
+            <div dangerouslySetInnerHTML={{ __html: slides[currentSlideIndex] }} />
+          </div>
+          <div className="flex justify-between items-center mt-6">
+            <Button onClick={goToPreviousSlide} disabled={currentSlideIndex === 0} variant="outline">
+              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+            </Button>
+            <span>
+              Slide {currentSlideIndex + 1} of {slides.length}
+            </span>
+            <Button onClick={goToNextSlide} disabled={currentSlideIndex === slides.length - 1} variant="outline">
+              Next <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </>
+      ) : (
+        <p className="text-center text-gray-500">Loading pitch deck...</p>
+      )}
     </div>
   );
 };
