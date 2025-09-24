@@ -26,10 +26,57 @@ const PitchDeckPage = () => {
   };
 
   const handlePDFComplete = (pdfData: string) => {
-    // The PDF download is handled by the existing generatePDF function
-    // This just shows success message and closes the modal
-    showSuccess("PDF generated successfully! Download will start automatically.");
-    setShowPDFModal(false);
+    try {
+      const fileName = `Scalix-World-Pitch-Deck-${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Method 1: Try blob download (most reliable)
+      try {
+        const byteCharacters = atob(pdfData);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 100);
+        
+        showSuccess("PDF downloaded successfully!");
+        setShowPDFModal(false);
+        return;
+      } catch (blobError) {
+        console.warn('Blob download failed, trying data URL method:', blobError);
+      }
+      
+      // Method 2: Fallback to data URL
+      const link = document.createElement('a');
+      link.href = `data:application/pdf;base64,${pdfData}`;
+      link.download = fileName;
+      link.style.display = 'none';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showSuccess("PDF downloaded successfully!");
+      setShowPDFModal(false);
+      
+    } catch (error) {
+      console.error('Download error:', error);
+      showError("Failed to download PDF. Please try again.");
+    }
   };
 
   const handlePDFModalClose = () => {

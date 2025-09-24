@@ -734,199 +734,44 @@
             }
         }
 
-        // Generate PDF from slides
+        // Generate PDF from slides (DISABLED - using PDFProgressModal instead)
         async function generatePDF(showNotifications = true) {
-            try {
-                console.log('Starting PDF generation...');
-                
-                // Show a subtle notification that PDF generation is starting (only if requested)
-                if (showNotifications) {
-                    showPDFNotification('Starting PDF generation...');
-                }
-                
-                // Capture screenshots of all slides
-                const slideImages = await captureAllSlides();
-                
-                // Generate PDF from images
-                await generatePDFFromImages(slideImages);
-                
-                console.log('PDF generation completed successfully');
-                if (showNotifications) {
-                    showPDFNotification('PDF generated successfully!');
-                }
-                
-            } catch (error) {
-                console.error('Error generating PDF:', error);
-                if (showNotifications) {
-                    showPDFNotification('Failed to generate PDF. Please try again.', 'error');
-                }
-                throw error; // Re-throw so the modal can handle it
-            }
+            // This function is disabled to prevent duplicate PDF generation
+            // The PDFProgressModal.tsx handles all PDF generation now
+            console.log('PDF generation handled by PDFProgressModal - this function is disabled');
+            return;
         }
 
-        // Show PDF generation notification
+        // Show PDF generation notification (DISABLED - using PDFProgressModal instead)
         function showPDFNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `pdf-notification ${type}`;
-            notification.innerHTML = `
-                <div class="pdf-notification-content">
-                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'file-pdf'}"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Show notification with animation
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
-            // Auto-remove after 3 seconds
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
+            // This function is disabled to prevent duplicate notifications
+            // The PDFProgressModal.tsx handles all notifications now
+            console.log('PDF notification handled by PDFProgressModal - this function is disabled');
+            return;
         }
 
-        // Capture screenshots of all slides
+        // Capture screenshots of all slides (DISABLED - using PDFProgressModal instead)
         async function captureAllSlides() {
-            const slideImages = [];
-            const originalSlideIndex = currentSlideIndex;
-            
-            console.log('Capturing screenshots of all slides...');
-            
-            for (let i = 0; i < totalSlides; i++) {
-                try {
-                    // Navigate to slide
-                    await loadSlide(i);
-                    
-                    // Wait for slide to load and render
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    // Capture screenshot
-                    const imageData = await captureSlideScreenshot();
-                    slideImages.push({
-                        slideNumber: i + 1,
-                        imageData: imageData
-                    });
-                    
-                    console.log(`Captured slide ${i + 1}/${totalSlides}`);
-                    
-                } catch (error) {
-                    console.error(`Error capturing slide ${i + 1}:`, error);
-                }
-            }
-            
-            // Return to original slide
-            await loadSlide(originalSlideIndex);
-            
-            return slideImages;
+            // This function is disabled to prevent duplicate PDF generation
+            // The PDFProgressModal.tsx handles all slide capture now
+            console.log('Slide capture handled by PDFProgressModal - this function is disabled');
+            return [];
         }
 
-        // Capture screenshot of current slide
+        // Capture screenshot of current slide (DISABLED - using PDFProgressModal instead)
         async function captureSlideScreenshot() {
-            return new Promise((resolve, reject) => {
-                try {
-                    const iframe = document.getElementById('slide-frame');
-                    if (!iframe || !iframe.contentDocument) {
-                        reject(new Error('Slide iframe not found'));
-                        return;
-                    }
-                    
-                    const slideElement = iframe.contentDocument.querySelector('.slide');
-                    if (!slideElement) {
-                        reject(new Error('Slide element not found'));
-                        return;
-                    }
-                    
-                    // Create a canvas to capture the slide
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Set canvas size to slide dimensions
-                    canvas.width = 1280;
-                    canvas.height = 720;
-                    
-                    // Create an image from the slide content
-                    html2canvas(slideElement, {
-                        canvas: canvas,
-                        width: 1280,
-                        height: 720,
-                        scale: 1,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: '#0a0e27'
-                    }).then(canvas => {
-                        const imageData = canvas.toDataURL('image/png', 1.0);
-                        resolve(imageData);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                    
-                } catch (error) {
-                    reject(error);
-                }
-            });
+            // This function is disabled to prevent duplicate PDF generation
+            // The PDFProgressModal.tsx handles all slide capture now
+            console.log('Slide screenshot handled by PDFProgressModal - this function is disabled');
+            return Promise.resolve('');
         }
 
-        // Generate PDF from images using jsPDF
+        // Generate PDF from images using jsPDF (DISABLED - using PDFProgressModal instead)
         async function generatePDFFromImages(slideImages) {
-            return new Promise((resolve, reject) => {
-                try {
-                    // Import jsPDF dynamically
-                    const script = document.createElement('script');
-                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                    script.onload = () => {
-                        try {
-                            const { jsPDF } = window.jspdf;
-                            const pdf = new jsPDF({
-                                orientation: 'landscape',
-                                unit: 'mm',
-                                format: 'a4'
-                            });
-                            
-                            // Add each slide as a page
-                            slideImages.forEach((slide, index) => {
-                                if (index > 0) {
-                                    pdf.addPage();
-                                }
-                                
-                                // Add slide image
-                                pdf.addImage(slide.imageData, 'PNG', 0, 0, 297, 210); // A4 landscape dimensions
-                                
-                                // Add slide number footer
-                                pdf.setFontSize(10);
-                                pdf.setTextColor(100, 100, 100);
-                                pdf.text(`Slide ${slide.slideNumber}`, 20, 290);
-                                
-                                // Add Scalix branding
-                                pdf.setFontSize(8);
-                                pdf.text('Scalix World - Desktop-First AI Development Platform', 150, 290);
-                            });
-                            
-                            // Download the PDF
-                            const fileName = `Scalix-World-Pitch-Deck-${new Date().toISOString().split('T')[0]}.pdf`;
-                            pdf.save(fileName);
-                            
-                            console.log(`PDF generated with ${slideImages.length} slides`);
-                            resolve();
-                            
-                        } catch (error) {
-                            reject(error);
-                        }
-                    };
-                    script.onerror = () => reject(new Error('Failed to load jsPDF'));
-                    document.head.appendChild(script);
-                    
-                } catch (error) {
-                    reject(error);
-                }
-            });
+            // This function is disabled to prevent duplicate PDF generation
+            // The PDFProgressModal.tsx handles all PDF generation now
+            console.log('PDF generation from images handled by PDFProgressModal - this function is disabled');
+            return Promise.resolve();
         }
 
         // Keyboard shortcuts
@@ -1350,8 +1195,9 @@
             setTimeout(initializeScrollAndZoom, 100);
         });
 
-        // Make generatePDF function available globally
-        window.generatePDF = generatePDF;
+        // Make functions available globally for PDF generation
+        window.loadSlide = loadSlide;
+        window.currentSlideIndex = currentSlideIndex;
     </script>
 </body>
 </html>
