@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import PitchDeckForm from "@/components/PitchDeckForm";
-import PitchDeckContent from "@/components/PitchDeckContent";
+import PDFProgressModal from "@/components/PDFProgressModal";
 import { Button } from "@/components/ui/button";
 import { Share2, Download } from "lucide-react";
 import { showSuccess, showError } from "@/utils/toast";
@@ -15,81 +15,25 @@ import {
 
 const PitchDeckPage = () => {
   const [hasAccess, setHasAccess] = useState(false);
+  const [showPDFModal, setShowPDFModal] = useState(false);
 
   const handleAccessGranted = () => {
     setHasAccess(true);
   };
 
   const handleDownload = () => {
-    const htmlContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pitch Deck</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f4f4f4; color: #333; }
-        .container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1, h2, h3 { color: #0056b3; }
-        .slide { margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-        .slide:last-child { border-bottom: none; }
-        .button { display: inline-block; background-color: #007bff; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 5px; }
-        .button:hover { background-color: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="slide">
-            <h1>Slide 1: Introduction</h1>
-            <p>Welcome to our pitch deck. We are excited to share our vision with you.</p>
-        </div>
-        <div class="slide">
-            <h2>Slide 2: Problem</h2>
-            <p>Many businesses struggle with inefficient data management and lack of actionable insights.</p>
-        </div>
-        <div class="slide">
-            <h2>Slide 3: Solution</h2>
-            <p>Our platform provides an all-in-one solution for data aggregation, analysis, and visualization, empowering businesses to make informed decisions.</p>
-            <ul>
-                <li>Real-time data dashboards</li>
-                <li>AI-powered analytics</li>
-                <li>Customizable reporting</li>
-            </ul>
-        </div>
-        <div class="slide">
-            <h2>Slide 4: Market Opportunity</h2>
-            <p>The global data analytics market is projected to reach $X billion by Y year, with a CAGR of Z%.</p>
-        </div>
-        <div class="slide">
-            <h2>Slide 5: Business Model</h2>
-            <p>We offer a subscription-based model with tiered pricing, catering to small businesses and large enterprises alike.</p>
-        </div>
-        <div class="slide">
-            <h2>Slide 6: Team</h2>
-            <p>Our team comprises experienced professionals in data science, software engineering, and business development.</p>
-        </div>
-        <div class="slide">
-            <h2>Slide 7: Financial Projections</h2>
-            <p>We project significant revenue growth over the next five years, reaching profitability by year 3.</p>
-        </div>
-        <div class="slide">
-            <h2>Slide 8: Call to Action</h2>
-            <p>Join us in revolutionizing data intelligence. Invest in our future.</p>
-            <a href="#" class="button">Contact Us</a>
-        </div>
-    </div>
-</body>
-</html>`;
-    const blob = new Blob([htmlContent], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "pitch-deck.html";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showSuccess("Pitch deck downloaded!");
+    setShowPDFModal(true);
+  };
+
+  const handlePDFComplete = (pdfData: string) => {
+    // The PDF download is handled by the existing generatePDF function
+    // This just shows success message and closes the modal
+    showSuccess("PDF generated successfully! Download will start automatically.");
+    setShowPDFModal(false);
+  };
+
+  const handlePDFModalClose = () => {
+    setShowPDFModal(false);
   };
 
   const handleShareLink = () => {
@@ -106,34 +50,72 @@ const PitchDeckPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0a0e27] to-[#1a237e]">
       {!hasAccess ? (
         <PitchDeckForm onAccessGranted={handleAccessGranted} />
       ) : (
-        <div className="w-full max-w-4xl">
-          <div className="flex justify-end space-x-2 mb-4">
-            <Button onClick={handleDownload} variant="outline">
-              <Download className="mr-2 h-4 w-4" /> Download
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Share2 className="mr-2 h-4 w-4" /> Share
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleShareLink}>
-                  Copy Link
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleShareEmail}>
-                  Share via Email
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+        <div className="w-full h-screen flex flex-col">
+          {/* Header with controls */}
+          <div className="flex justify-between items-center p-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
+            <div className="flex items-center gap-4">
+              <img
+                src="https://z-cdn-media.chatglm.cn/files/a6735ff9-1e2b-4cba-b0a3-2e4e50a5af33_logo.png.png?auth_key=1790171439-d2f879595c5640b2bd9030d45fc9b9d6-0-793df07e36ebfc08f202946421960f09"
+                alt="Scalix World Logo"
+                className="w-8 h-auto"
+              />
+              <div>
+                <h1 className="text-white font-semibold">Scalix World Pitch Deck</h1>
+                <p className="text-gray-400 text-sm">Desktop-First AI Development Platform</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <Button
+                onClick={handleDownload}
+                className="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 font-medium px-6 py-2 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-700"></div>
+                <Download className="mr-2 h-4 w-4 relative z-10" /> 
+                <span className="relative z-10">Download PDF</span>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+                  >
+                    <Share2 className="mr-2 h-4 w-4" /> Share
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-gray-800 border-white/20">
+                  <DropdownMenuItem onClick={handleShareLink} className="text-white hover:bg-white/10">
+                    Copy Link
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleShareEmail} className="text-white hover:bg-white/10">
+                    Share via Email
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-          <PitchDeckContent />
+
+          {/* Pitch Deck Iframe */}
+          <div className="flex-1">
+                     <iframe
+                       src="/presentation-viewer.html"
+                       className="w-full h-full border-0"
+                       title="Scalix Pitch Deck"
+                     />
+          </div>
         </div>
       )}
+
+      {/* PDF Progress Modal */}
+      <PDFProgressModal
+        isOpen={showPDFModal}
+        onClose={handlePDFModalClose}
+        onComplete={handlePDFComplete}
+      />
     </div>
   );
 };

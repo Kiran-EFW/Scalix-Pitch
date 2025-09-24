@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scalix World - Investor Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Libraries for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+        }
+
+        .presentation-header {
+            display: none; /* Hide the duplicate header */
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 40px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(79, 172, 254, 0.5));
+        }
+
+        .presentation-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .slide-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .slide-counter {
+            font-size: 14px;
+            color: #b8c5ff;
+            font-weight: 500;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(79, 172, 254, 0.2);
+            border: 1px solid rgba(79, 172, 254, 0.4);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #4facfe;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(79, 172, 254, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-viewer {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+            height: 100vh; /* Take full height since header is hidden */
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: auto;
+            position: relative;
+        }
+
+        .slide {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
+
+        .slide.auto-fit {
+            transform: scale(var(--slide-scale, 1));
+            transform-origin: center center;
+            margin: auto;
+            display: block;
+            cursor: default;
+            transition: transform 0.3s ease;
+            max-height: 100vh;
+            overflow: visible;
+        }
+
+        /* Responsive adjustments for different device heights */
+        @media (max-height: 800px) {
+            .slide.auto-fit .content {
+                padding: 15px 20px !important;
+                gap: 15px !important;
+            }
+            
+            .slide.auto-fit h1, .slide.auto-fit h2, .slide.auto-fit h3 {
+                font-size: 0.8em !important;
+            }
+            
+            .slide.auto-fit .problem-card, .slide.auto-fit .feature-card, .slide.auto-fit .advantage-card {
+                padding: 15px !important;
+                margin-bottom: 10px !important;
+            }
+        }
+
+        @media (max-height: 1000px) {
+            .slide.auto-fit .content {
+                padding: 20px 30px !important;
+                gap: 20px !important;
+            }
+            
+            .slide.auto-fit h1, .slide.auto-fit h2, .slide.auto-fit h3 {
+                font-size: 0.9em !important;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .slide.auto-fit .content {
+                padding: 10px 15px !important;
+                gap: 10px !important;
+            }
+            
+            .slide.auto-fit * {
+                font-size: 0.8em !important;
+            }
+        }
+
+        .slide.auto-fit:active {
+            cursor: grabbing;
+        }
+
+        .slide.auto-fit.panning {
+            transition: none;
+            cursor: grabbing !important;
+        }
+
+        /* Pan and scroll indicators */
+        .pan-indicator {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-size: 12px;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pan-indicator.show {
+            opacity: 1;
+        }
+
+        .pan-indicator i {
+            margin-right: 5px;
+            color: #4facfe;
+        }
+
+        .slide-content {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        /* Responsive scaling */
+        @media (max-width: 1920px) {
+            .slide {
+                transform: scale(0.9);
+            }
+        }
+
+        @media (max-width: 1600px) {
+            .slide {
+                transform: scale(0.8);
+            }
+        }
+
+        @media (max-width: 1366px) {
+            .slide {
+                transform: scale(0.7);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .slide {
+                transform: scale(0.6);
+            }
+        }
+
+        /* Slide indicators */
+        .slide-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: #4facfe;
+            transform: scale(1.2);
+        }
+
+        .indicator:hover {
+            background: rgba(79, 172, 254, 0.6);
+        }
+
+        /* Keyboard shortcuts info */
+        .shortcuts-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            color: #b8c5ff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .shortcuts-info.show {
+            opacity: 1;
+        }
+
+        /* Loading animation */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4facfe;
+            font-size: 18px;
+        }
+
+        .spinner {
+            border: 2px solid rgba(79, 172, 254, 0.3);
+            border-top: 2px solid #4facfe;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Fullscreen mode */
+        .fullscreen-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        /* Floating navigation controls */
+        .floating-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 10px 15px;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .floating-slide-counter {
+            font-size: 14px;
+            color: #b8c5ff;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .floating-nav-btn {
+            background: rgba(79, 172, 254, 0.2);
+            border: 1px solid rgba(79, 172, 254, 0.4);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #4facfe;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .floating-nav-btn:hover {
+            background: rgba(79, 172, 254, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .floating-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .floating-fullscreen-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .floating-fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Zoom Controls */
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 6px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .zoom-btn {
+            background: rgba(79, 172, 254, 0.2);
+            border: 1px solid rgba(79, 172, 254, 0.4);
+            color: #4facfe;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(79, 172, 254, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .zoom-indicator {
+            color: #e0e7ff;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        /* PDF Notification */
+        .pdf-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .pdf-notification.show {
+            transform: translateX(0);
+        }
+
+        .pdf-notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .pdf-notification i {
+            font-size: 16px;
+            color: #4facfe;
+        }
+
+        .pdf-notification.error i {
+            color: #ff6b6b;
+        }
+
+        /* Hide floating controls in fullscreen mode */
+        .presentation-container:fullscreen .floating-controls {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Show floating controls on hover in fullscreen */
+        .presentation-container:fullscreen:hover .floating-controls {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Alternative: Show controls when pressing a key in fullscreen */
+        .presentation-container:fullscreen .floating-controls.show-on-keypress {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Header with controls -->
+        <div class="presentation-header">
+            <div class="logo-section">
+                <img src="https://z-cdn-media.chatglm.cn/files/a6735ff9-1e2b-4cba-b0a3-2e4e50a5af33_logo.png.png?auth_key=1790171439-d2f879595c5640b2bd9030d45fc9b9d6-0-793df07e36ebfc08f202946421960f09" alt="Scalix World Logo" class="logo">
+                <div class="presentation-title">Scalix World - Investor Presentation</div>
+            </div>
+            
+            <div class="slide-controls">
+                <div class="slide-counter">
+                    <span id="current-slide">1</span> / <span id="total-slides">15</span>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prev-btn" onclick="previousSlide()">
+                        <i class="fas fa-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button class="nav-btn" id="next-btn" onclick="nextSlide()">
+                        Next
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main slide viewer -->
+        <div class="slide-viewer">
+            <!-- Floating navigation controls -->
+            <div class="floating-controls">
+                <div class="floating-slide-counter">
+                    <span id="floating-current-slide">1</span> / <span id="floating-total-slides">15</span>
+                </div>
+                
+                <button class="floating-nav-btn" id="floating-prev-btn" onclick="previousSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                    Previous
+                </button>
+                <button class="floating-nav-btn" id="floating-next-btn" onclick="nextSlide()">
+                    Next
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="floating-fullscreen-btn" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                </button>
+                
+                <!-- Zoom Controls -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <span class="zoom-indicator" id="zoom-indicator">100%</span>
+                    <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="zoom-btn" onclick="resetZoom()" title="Reset to Auto-fit">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="slide-container">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    Loading presentation...
+                </div>
+                <iframe id="slide-frame" src="" style="display: none; width: 100%; height: 100%; border: none; background: transparent;"></iframe>
+                
+                <!-- Pan and scroll indicator -->
+                <div class="pan-indicator" id="pan-indicator">
+                    <i class="fas fa-hand-paper"></i>
+                    Drag to pan • Scroll to zoom
+                </div>
+            </div>
+            
+            <!-- Slide indicators -->
+            <div class="slide-indicators" id="slide-indicators"></div>
+            
+            <!-- Progress bar -->
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- Keyboard shortcuts info -->
+        <div class="shortcuts-info" id="shortcuts-info">
+            <div><strong>Keyboard Shortcuts:</strong></div>
+            <div>← → Arrow keys: Navigate slides</div>
+            <div>F: Toggle fullscreen</div>
+            <div>Esc: Exit fullscreen</div>
+            <div>+ / -: Zoom in/out</div>
+            <div>0: Reset to auto-fit</div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const totalSlides = 15;
+        const slideUrls = [];
+        
+        // Generate slide URLs
+        for (let i = 1; i <= totalSlides; i++) {
+            slideUrls.push(`#slide-${i}`);
+        }
+
+        // Initialize presentation
+        function initPresentation() {
+            // Hide loading
+            document.getElementById('loading').style.display = 'none';
+            
+            // Load first slide
+            loadSlide(0);
+            
+            // Create indicators
+            createIndicators();
+            
+            // Update progress
+            updateProgress();
+            
+            // Show shortcuts info briefly
+            setTimeout(() => {
+                document.getElementById('shortcuts-info').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('shortcuts-info').classList.remove('show');
+                }, 3000);
+            }, 1000);
+        }
+
+        // Load specific slide
+        function loadSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            
+            currentSlideIndex = index;
+            const iframe = document.getElementById('slide-frame');
+            
+            // Load the individual slide file
+            iframe.src = '/slides/slide-' + (index + 1) + '.html';
+            iframe.style.display = 'block';
+            
+            // Update UI
+            updateSlideCounter();
+            updateIndicators();
+            updateProgress();
+            updateNavButtons();
+            
+            // Auto-scale after a short delay to ensure content is loaded
+            setTimeout(() => {
+                initializeScrollAndZoom();
+            }, 300);
+        }
+
+        // Navigate to next slide
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                loadSlide(currentSlideIndex + 1);
+            }
+        }
+
+        // Navigate to previous slide
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                loadSlide(currentSlideIndex - 1);
+            }
+        }
+
+        // Update slide counter
+        function updateSlideCounter() {
+            document.getElementById('current-slide').textContent = currentSlideIndex + 1;
+            document.getElementById('floating-current-slide').textContent = currentSlideIndex + 1;
+        }
+
+        // Create slide indicators
+        function createIndicators() {
+            const container = document.getElementById('slide-indicators');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < totalSlides; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator';
+                if (i === currentSlideIndex) indicator.classList.add('active');
+                indicator.onclick = () => loadSlide(i);
+                container.appendChild(indicator);
+            }
+        }
+
+        // Update indicators
+        function updateIndicators() {
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlideIndex);
+            });
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((currentSlideIndex + 1) / totalSlides) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        // Update navigation buttons
+        function updateNavButtons() {
+            document.getElementById('prev-btn').disabled = currentSlideIndex === 0;
+            document.getElementById('next-btn').disabled = currentSlideIndex === totalSlides - 1;
+            document.getElementById('floating-prev-btn').disabled = currentSlideIndex === 0;
+            document.getElementById('floating-next-btn').disabled = currentSlideIndex === totalSlides - 1;
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Show floating controls temporarily (for fullscreen mode)
+        function showFloatingControls() {
+            const controls = document.querySelector('.floating-controls');
+            if (controls) {
+                controls.classList.add('show-on-keypress');
+                setTimeout(() => {
+                    controls.classList.remove('show-on-keypress');
+                }, 3000); // Show for 3 seconds
+            }
+        }
+
+        // Generate PDF from slides
+        async function generatePDF(showNotifications = true) {
+            try {
+                console.log('Starting PDF generation...');
+                
+                // Show a subtle notification that PDF generation is starting (only if requested)
+                if (showNotifications) {
+                    showPDFNotification('Starting PDF generation...');
+                }
+                
+                // Capture screenshots of all slides
+                const slideImages = await captureAllSlides();
+                
+                // Generate PDF from images
+                await generatePDFFromImages(slideImages);
+                
+                console.log('PDF generation completed successfully');
+                if (showNotifications) {
+                    showPDFNotification('PDF generated successfully!');
+                }
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                if (showNotifications) {
+                    showPDFNotification('Failed to generate PDF. Please try again.', 'error');
+                }
+                throw error; // Re-throw so the modal can handle it
+            }
+        }
+
+        // Show PDF generation notification
+        function showPDFNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `pdf-notification ${type}`;
+            notification.innerHTML = `
+                <div class="pdf-notification-content">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'file-pdf'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification with animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Capture screenshots of all slides
+        async function captureAllSlides() {
+            const slideImages = [];
+            const originalSlideIndex = currentSlideIndex;
+            
+            console.log('Capturing screenshots of all slides...');
+            
+            for (let i = 0; i < totalSlides; i++) {
+                try {
+                    // Navigate to slide
+                    await loadSlide(i);
+                    
+                    // Wait for slide to load and render
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Capture screenshot
+                    const imageData = await captureSlideScreenshot();
+                    slideImages.push({
+                        slideNumber: i + 1,
+                        imageData: imageData
+                    });
+                    
+                    console.log(`Captured slide ${i + 1}/${totalSlides}`);
+                    
+                } catch (error) {
+                    console.error(`Error capturing slide ${i + 1}:`, error);
+                }
+            }
+            
+            // Return to original slide
+            await loadSlide(originalSlideIndex);
+            
+            return slideImages;
+        }
+
+        // Capture screenshot of current slide
+        async function captureSlideScreenshot() {
+            return new Promise((resolve, reject) => {
+                try {
+                    const iframe = document.getElementById('slide-frame');
+                    if (!iframe || !iframe.contentDocument) {
+                        reject(new Error('Slide iframe not found'));
+                        return;
+                    }
+                    
+                    const slideElement = iframe.contentDocument.querySelector('.slide');
+                    if (!slideElement) {
+                        reject(new Error('Slide element not found'));
+                        return;
+                    }
+                    
+                    // Create a canvas to capture the slide
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Set canvas size to slide dimensions
+                    canvas.width = 1280;
+                    canvas.height = 720;
+                    
+                    // Create an image from the slide content
+                    html2canvas(slideElement, {
+                        canvas: canvas,
+                        width: 1280,
+                        height: 720,
+                        scale: 1,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#0a0e27'
+                    }).then(canvas => {
+                        const imageData = canvas.toDataURL('image/png', 1.0);
+                        resolve(imageData);
+                    }).catch(error => {
+                        reject(error);
+                    });
+                    
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // Generate PDF from images using jsPDF
+        async function generatePDFFromImages(slideImages) {
+            return new Promise((resolve, reject) => {
+                try {
+                    // Import jsPDF dynamically
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                    script.onload = () => {
+                        try {
+                            const { jsPDF } = window.jspdf;
+                            const pdf = new jsPDF({
+                                orientation: 'landscape',
+                                unit: 'mm',
+                                format: 'a4'
+                            });
+                            
+                            // Add each slide as a page
+                            slideImages.forEach((slide, index) => {
+                                if (index > 0) {
+                                    pdf.addPage();
+                                }
+                                
+                                // Add slide image
+                                pdf.addImage(slide.imageData, 'PNG', 0, 0, 297, 210); // A4 landscape dimensions
+                                
+                                // Add slide number footer
+                                pdf.setFontSize(10);
+                                pdf.setTextColor(100, 100, 100);
+                                pdf.text(`Slide ${slide.slideNumber}`, 20, 290);
+                                
+                                // Add Scalix branding
+                                pdf.setFontSize(8);
+                                pdf.text('Scalix World - Desktop-First AI Development Platform', 150, 290);
+                            });
+                            
+                            // Download the PDF
+                            const fileName = `Scalix-World-Pitch-Deck-${new Date().toISOString().split('T')[0]}.pdf`;
+                            pdf.save(fileName);
+                            
+                            console.log(`PDF generated with ${slideImages.length} slides`);
+                            resolve();
+                            
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    script.onerror = () => reject(new Error('Failed to load jsPDF'));
+                    document.head.appendChild(script);
+                    
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Show floating controls in fullscreen mode when any key is pressed
+            if (document.fullscreenElement) {
+                showFloatingControls();
+            }
+            
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    previousSlide();
+                    break;
+                case 'f':
+                case 'F':
+                    e.preventDefault();
+                    toggleFullscreen();
+                    break;
+                case 'Escape':
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                    break;
+                case '+':
+                case '=':
+                    e.preventDefault();
+                    zoomIn();
+                    break;
+                case '-':
+                    e.preventDefault();
+                    zoomOut();
+                    break;
+                case '0':
+                    e.preventDefault();
+                    resetZoom();
+                    break;
+            }
+        });
+
+        // Initialize when page loads
+        window.addEventListener('load', initPresentation);
+
+        // Handle iframe load
+        document.getElementById('slide-frame').addEventListener('load', () => {
+            // Iframe loaded successfully
+            console.log('Slide loaded');
+            
+            // Auto-scale slides that are too long
+            setTimeout(() => {
+                initializeScrollAndZoom();
+            }, 500);
+        });
+
+        // Intelligent Auto-Fit with Manual Zoom System
+        let currentZoom = 1.0;
+        let autoFitZoom = 1.0;
+        const minZoom = 0.3;
+        const maxZoom = 2.0;
+        const zoomStep = 0.1;
+
+        function initializeScrollAndZoom() {
+            const iframe = document.getElementById('slide-frame');
+            if (!iframe.contentDocument) return;
+            
+            const slideElement = iframe.contentDocument.querySelector('.slide');
+            if (!slideElement) return;
+            
+            // Reset any previous scaling
+            slideElement.style.transform = '';
+            slideElement.style.left = '';
+            slideElement.style.top = '';
+            slideElement.style.position = '';
+            slideElement.classList.remove('auto-fit');
+            
+            // Get viewport and slide dimensions
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const slideRect = slideElement.getBoundingClientRect();
+            const slideWidth = slideRect.width || 1280;
+            const slideHeight = slideRect.height || 720;
+            
+            // Calculate if slide needs auto-fitting
+            const needsAutoFit = slideHeight > viewportHeight || slideWidth > viewportWidth;
+            
+            if (needsAutoFit) {
+                // Calculate auto-fit zoom to make slide fit the screen
+                const padding = 40; // Breathing room
+                const availableHeight = viewportHeight - padding;
+                const availableWidth = viewportWidth - padding;
+                
+                const scaleX = availableWidth / slideWidth;
+                const scaleY = availableHeight / slideHeight;
+                autoFitZoom = Math.min(scaleX, scaleY);
+                
+                // Set minimum auto-fit zoom for readability
+                autoFitZoom = Math.max(autoFitZoom, 0.3);
+                
+                // Set current zoom to auto-fit zoom
+                currentZoom = autoFitZoom;
+                
+                console.log(`Slide ${currentSlideIndex + 1} - Auto-fitted to ${(autoFitZoom * 100).toFixed(0)}% to fit screen`);
+            } else {
+                // Slide fits naturally, no auto-fit needed
+                autoFitZoom = 1.0;
+                currentZoom = 1.0;
+                console.log(`Slide ${currentSlideIndex + 1} - Fits naturally at 100%`);
+            }
+            
+            // Set up iframe body for natural scrolling
+            const iframeBody = iframe.contentDocument.body;
+            if (iframeBody) {
+                iframeBody.style.display = 'block';
+                iframeBody.style.justifyContent = '';
+                iframeBody.style.alignItems = '';
+                iframeBody.style.minHeight = '100vh';
+                iframeBody.style.margin = '0';
+                iframeBody.style.padding = '20px';
+                iframeBody.style.overflow = 'auto';
+            }
+            
+            // Center the slide naturally
+            slideElement.style.margin = '0 auto';
+            slideElement.style.display = 'block';
+            
+            // Apply current zoom
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const iframe = document.getElementById('slide-frame');
+            if (!iframe.contentDocument) return;
+            
+            const slideElement = iframe.contentDocument.querySelector('.slide');
+            if (!slideElement) return;
+            
+            slideElement.style.transform = `scale(${currentZoom})`;
+            slideElement.style.transformOrigin = 'center top';
+            
+            // Update zoom indicator
+            updateZoomIndicator();
+        }
+
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+            applyZoom();
+        }
+
+        function zoomOut() {
+            // Don't zoom out below the auto-fit zoom level
+            const effectiveMinZoom = Math.max(autoFitZoom, minZoom);
+            currentZoom = Math.max(currentZoom - zoomStep, effectiveMinZoom);
+            applyZoom();
+        }
+
+        function resetZoom() {
+            // Reset to auto-fit zoom if slide was auto-fitted, otherwise 100%
+            currentZoom = autoFitZoom;
+            applyZoom();
+        }
+
+        function updateZoomIndicator() {
+            const zoomIndicator = document.getElementById('zoom-indicator');
+            if (zoomIndicator) {
+                const zoomPercent = Math.round(currentZoom * 100);
+                const autoFitPercent = Math.round(autoFitZoom * 100);
+                
+                if (autoFitZoom < 1.0 && currentZoom === autoFitZoom) {
+                    // Show "Auto-fit" when at auto-fit zoom level
+                    zoomIndicator.textContent = `Auto-fit (${zoomPercent}%)`;
+                    zoomIndicator.title = `Auto-fitted to fit screen. Current: ${zoomPercent}%`;
+                } else if (autoFitZoom < 1.0) {
+                    // Show current zoom with auto-fit reference
+                    zoomIndicator.textContent = `${zoomPercent}%`;
+                    zoomIndicator.title = `Auto-fit: ${autoFitPercent}% | Current: ${zoomPercent}%`;
+                } else {
+                    // Normal zoom display
+                    zoomIndicator.textContent = `${zoomPercent}%`;
+                    zoomIndicator.title = `Current zoom: ${zoomPercent}%`;
+                }
+            }
+        }
+
+        // Adjust slide layout to fit device height
+        function adjustSlideLayoutForDevice(slideElement, viewportWidth, viewportHeight, isLongSlide) {
+            const slideContent = slideElement.querySelector('.content');
+            if (!slideContent) return;
+            
+            // Calculate available height after scaling
+            const scaledHeight = 720 * parseFloat(slideElement.style.getPropertyValue('--slide-scale') || 1);
+            const availableHeight = Math.min(scaledHeight, viewportHeight - 40);
+            
+            // Device-specific adjustments
+            if (viewportHeight < 800) {
+                // Mobile/tablet portrait - compact layout
+                slideContent.style.padding = '15px 20px';
+                slideContent.style.gap = '15px';
+                
+                // Reduce font sizes
+                const headings = slideContent.querySelectorAll('h1, h2, h3');
+                headings.forEach(heading => {
+                    const currentSize = parseFloat(getComputedStyle(heading).fontSize);
+                    heading.style.fontSize = `${Math.max(currentSize * 0.8, 16)}px`;
+                });
+                
+                // Reduce margins and padding
+                const cards = slideContent.querySelectorAll('.problem-card, .feature-card, .advantage-card');
+                cards.forEach(card => {
+                    card.style.padding = '15px';
+                    card.style.marginBottom = '10px';
+                });
+                
+            } else if (viewportHeight < 1000) {
+                // Tablet landscape - medium layout
+                slideContent.style.padding = '20px 30px';
+                slideContent.style.gap = '20px';
+                
+                // Slightly reduce font sizes
+                const headings = slideContent.querySelectorAll('h1, h2, h3');
+                headings.forEach(heading => {
+                    const currentSize = parseFloat(getComputedStyle(heading).fontSize);
+                    heading.style.fontSize = `${Math.max(currentSize * 0.9, 18)}px`;
+                });
+                
+            } else {
+                // Desktop - full layout
+                slideContent.style.padding = '30px 40px';
+                slideContent.style.gap = '25px';
+            }
+            
+            // Special handling for long slides
+            if (isLongSlide) {
+                // Make content more compact
+                slideContent.style.padding = '20px 30px';
+                slideContent.style.gap = '15px';
+                
+                // Reduce spacing between elements
+                const sections = slideContent.querySelectorAll('.problem-grid, .features-container, .advantages-grid');
+                sections.forEach(section => {
+                    section.style.gap = '15px';
+                    section.style.marginBottom = '20px';
+                });
+                
+                // Make cards more compact
+                const cards = slideContent.querySelectorAll('.problem-card, .feature-card, .advantage-card');
+                cards.forEach(card => {
+                    card.style.padding = '15px';
+                    card.style.marginBottom = '10px';
+                });
+                
+                // Reduce font sizes for better fit
+                const headings = slideContent.querySelectorAll('h1, h2, h3');
+                headings.forEach(heading => {
+                    const currentSize = parseFloat(getComputedStyle(heading).fontSize);
+                    heading.style.fontSize = `${Math.max(currentSize * 0.85, 16)}px`;
+                });
+                
+                const paragraphs = slideContent.querySelectorAll('p, .pain-point-text, .feature-text');
+                paragraphs.forEach(p => {
+                    const currentSize = parseFloat(getComputedStyle(p).fontSize);
+                    p.style.fontSize = `${Math.max(currentSize * 0.9, 14)}px`;
+                });
+            }
+            
+            // Ensure content fits within available height
+            if (availableHeight < 600) {
+                // Very compact layout for small screens
+                slideContent.style.padding = '10px 15px';
+                slideContent.style.gap = '10px';
+                
+                // Further reduce font sizes
+                const allText = slideContent.querySelectorAll('h1, h2, h3, p, span, div');
+                allText.forEach(element => {
+                    const currentSize = parseFloat(getComputedStyle(element).fontSize);
+                    if (currentSize > 12) {
+                        element.style.fontSize = `${Math.max(currentSize * 0.8, 12)}px`;
+                    }
+                });
+            }
+        }
+
+        // Initialize pan and scroll functionality
+        // Conservative pan and scroll that only activates when truly needed
+        function initializeIntelligentPanAndScroll(slideElement, optimalScale, scaledWidth, scaledHeight) {
+            let isPanning = false;
+            let startX, startY, currentX = 0, currentY = 0;
+            let currentScale = optimalScale;
+            
+            // Get viewport dimensions for intelligent bounds checking
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate maximum pan bounds to prevent over-panning
+            const maxPanX = Math.max(0, (scaledWidth - viewportWidth) / 2);
+            const maxPanY = Math.max(0, (scaledHeight - viewportHeight) / 2);
+            
+            // Only show pan indicator if content is significantly larger than viewport
+            const panIndicator = document.getElementById('pan-indicator');
+            const needsPanning = (scaledWidth > viewportWidth * 1.1) || (scaledHeight > viewportHeight * 1.1);
+            
+            if (needsPanning) {
+                panIndicator.classList.add('show');
+                setTimeout(() => {
+                    panIndicator.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Intelligent mouse events for panning
+            slideElement.addEventListener('mousedown', (e) => {
+                if (e.button === 0 && needsPanning) { // Left mouse button and panning needed
+                    isPanning = true;
+                    startX = e.clientX - currentX;
+                    startY = e.clientY - currentY;
+                    slideElement.classList.add('panning');
+                    slideElement.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+            });
+            
+            slideElement.addEventListener('mousemove', (e) => {
+                if (isPanning && needsPanning) {
+                    const newX = e.clientX - startX;
+                    const newY = e.clientY - startY;
+                    
+                    // Apply intelligent bounds checking
+                    currentX = Math.max(-maxPanX, Math.min(maxPanX, newX));
+                    currentY = Math.max(-maxPanY, Math.min(maxPanY, newY));
+                    
+                    // Apply smooth transform with intelligent centering
+                    slideElement.style.transform = `translate(-50%, -50%) scale(${currentScale}) translate(${currentX / currentScale}px, ${currentY / currentScale}px)`;
+                }
+            });
+            
+            slideElement.addEventListener('mouseup', () => {
+                isPanning = false;
+                slideElement.classList.remove('panning');
+                slideElement.style.cursor = needsPanning ? 'grab' : 'default';
+            });
+            
+            slideElement.addEventListener('mouseleave', () => {
+                isPanning = false;
+                slideElement.classList.remove('panning');
+                slideElement.style.cursor = needsPanning ? 'grab' : 'default';
+            });
+            
+            // Intelligent touch events for mobile
+            slideElement.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1 && needsPanning) {
+                    isPanning = true;
+                    startX = e.touches[0].clientX - currentX;
+                    startY = e.touches[0].clientY - currentY;
+                    slideElement.classList.add('panning');
+                    e.preventDefault();
+                }
+            });
+            
+            slideElement.addEventListener('touchmove', (e) => {
+                if (isPanning && e.touches.length === 1 && needsPanning) {
+                    const newX = e.touches[0].clientX - startX;
+                    const newY = e.touches[0].clientY - startY;
+                    
+                    // Apply intelligent bounds checking
+                    currentX = Math.max(-maxPanX, Math.min(maxPanX, newX));
+                    currentY = Math.max(-maxPanY, Math.min(maxPanY, newY));
+                    
+                    // Apply smooth transform with intelligent centering
+                    slideElement.style.transform = `translate(-50%, -50%) scale(${currentScale}) translate(${currentX / currentScale}px, ${currentY / currentScale}px)`;
+                    e.preventDefault();
+                }
+            });
+            
+            slideElement.addEventListener('touchend', () => {
+                isPanning = false;
+                slideElement.classList.remove('panning');
+            });
+            
+            // Intelligent wheel events for zooming with auto-fit integration
+            slideElement.addEventListener('wheel', (e) => {
+                if (!needsPanning) return; // Only allow zooming if panning is needed
+                
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                const newScale = Math.max(0.3, Math.min(1.2, currentScale * delta));
+                
+                // Update scale and recalculate bounds
+                currentScale = newScale;
+                const newScaledWidth = scaledWidth * (newScale / optimalScale);
+                const newScaledHeight = scaledHeight * (newScale / optimalScale);
+                const newMaxPanX = Math.max(0, (newScaledWidth - viewportWidth) / 2);
+                const newMaxPanY = Math.max(0, (newScaledHeight - viewportHeight) / 2);
+                
+                // Apply bounds checking to current pan position
+                currentX = Math.max(-newMaxPanX, Math.min(newMaxPanX, currentX));
+                currentY = Math.max(-newMaxPanY, Math.min(newMaxPanY, currentY));
+                
+                // Apply the new transform
+                slideElement.style.transform = `translate(-50%, -50%) scale(${currentScale}) translate(${currentX / currentScale}px, ${currentY / currentScale}px)`;
+                
+                // Show pan indicator when zooming
+                panIndicator.classList.add('show');
+                setTimeout(() => {
+                    panIndicator.classList.remove('show');
+                }, 2000);
+            });
+            
+            // Set initial cursor based on panning needs
+            slideElement.style.cursor = needsPanning ? 'grab' : 'default';
+            
+            // Reset pan position when changing slides
+            currentX = 0;
+            currentY = 0;
+        }
+
+        // Re-scale on window resize
+        window.addEventListener('resize', () => {
+            setTimeout(initializeScrollAndZoom, 100);
+        });
+
+        // Make generatePDF function available globally
+        window.generatePDF = generatePDF;
+    </script>
+</body>
+</html>
