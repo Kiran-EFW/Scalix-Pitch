@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Sparkles, Shield, Zap } from "lucide-react";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const Index = () => {
   return (
@@ -11,13 +12,16 @@ const Index = () => {
         <div className="absolute bottom-[-150px] right-[-150px] w-[500px] h-[500px] bg-gradient-to-r from-blue-400/15 to-cyan-400/15 rounded-full blur-3xl"></div>
       </div>
 
+      {/* Animated Background Elements */}
+      <AnimatedBackground />
+
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
         {/* Logo and Brand */}
         <div className="text-center mb-12">
           <div className="mb-8">
             <img
-              src="https://z-cdn-media.chatglm.cn/files/a6735ff9-1e2b-4cba-b0a3-2e4e50a5af33_logo.png.png?auth_key=1790171439-d2f879595c5640b2bd9030d45fc9b9d6-0-793df07e36ebfc08f202946421960f09"
+              src="/scalix-logo.png"
               alt="Scalix World Logo"
               className="w-32 h-auto mx-auto mb-6 filter drop-shadow-lg"
             />
@@ -62,8 +66,8 @@ const Index = () => {
               Experience the Future of AI Development
             </h2>
             <p className="text-gray-300 mb-8 text-lg">
-              Join thousands of developers who have revolutionized their workflow with Scalix World.
-              View our complete pitch deck to learn how we're transforming the AI development landscape.
+              Join the Scalix ecosystem and revolutionize your development workflow. Save time, modernize your processes, and unlock the power of desktop-first AI development.
+              View our complete pitch deck to discover how we're transforming the AI development landscape.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

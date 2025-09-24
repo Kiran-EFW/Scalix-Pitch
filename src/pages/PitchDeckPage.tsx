@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import PitchDeckForm from "@/components/PitchDeckForm";
-import PDFProgressModal from "@/components/PDFProgressModal";
+// PDFProgressModal removed - using static PDF download
 import { Button } from "@/components/ui/button";
 import { Share2, Download } from "lucide-react";
 import { showSuccess, showError } from "@/utils/toast";
@@ -15,73 +15,27 @@ import {
 
 const PitchDeckPage = () => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [showPDFModal, setShowPDFModal] = useState(false);
+  // PDF modal state removed - using static PDF download
 
   const handleAccessGranted = () => {
     setHasAccess(true);
   };
 
   const handleDownload = () => {
-    setShowPDFModal(true);
+    // Download the static PDF from the server
+    const link = document.createElement('a');
+    link.href = '/Scalix-World-Pitch-Deck-2025.pdf';
+    link.download = 'Scalix-World-Pitch-Deck-2025.pdf';
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showSuccess("PDF downloaded successfully!");
   };
 
-  const handlePDFComplete = (pdfData: string) => {
-    try {
-      const fileName = `Scalix-World-Pitch-Deck-${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      // Method 1: Try blob download (most reliable)
-      try {
-        const byteCharacters = atob(pdfData);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-        
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        link.style.display = 'none';
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        setTimeout(() => {
-          window.URL.revokeObjectURL(url);
-        }, 100);
-        
-        showSuccess("PDF downloaded successfully!");
-        setShowPDFModal(false);
-        return;
-      } catch (blobError) {
-        console.warn('Blob download failed, trying data URL method:', blobError);
-      }
-      
-      // Method 2: Fallback to data URL
-      const link = document.createElement('a');
-      link.href = `data:application/pdf;base64,${pdfData}`;
-      link.download = fileName;
-      link.style.display = 'none';
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      showSuccess("PDF downloaded successfully!");
-      setShowPDFModal(false);
-      
-    } catch (error) {
-      console.error('Download error:', error);
-      showError("Failed to download PDF. Please try again.");
-    }
-  };
-
-  const handlePDFModalClose = () => {
-    setShowPDFModal(false);
-  };
+  // PDF modal handlers removed - using static PDF download
 
   const handleShareLink = () => {
     const currentUrl = window.location.href;
@@ -106,7 +60,7 @@ const PitchDeckPage = () => {
           <div className="flex justify-between items-center p-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
             <div className="flex items-center gap-4">
               <img
-                src="https://z-cdn-media.chatglm.cn/files/a6735ff9-1e2b-4cba-b0a3-2e4e50a5af33_logo.png.png?auth_key=1790171439-d2f879595c5640b2bd9030d45fc9b9d6-0-793df07e36ebfc08f202946421960f09"
+                src="/scalix-logo.png"
                 alt="Scalix World Logo"
                 className="w-8 h-auto"
               />
@@ -157,12 +111,7 @@ const PitchDeckPage = () => {
         </div>
       )}
 
-      {/* PDF Progress Modal */}
-      <PDFProgressModal
-        isOpen={showPDFModal}
-        onClose={handlePDFModalClose}
-        onComplete={handlePDFComplete}
-      />
+      {/* PDF Progress Modal removed - using static PDF download */}
     </div>
   );
 };

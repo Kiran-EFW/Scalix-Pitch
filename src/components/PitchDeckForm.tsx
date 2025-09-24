@@ -14,7 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { showSuccess, showError } from "@/utils/toast";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -24,6 +26,12 @@ const formSchema = z.object({
     message: "Please enter a valid email address.",
   }),
   phone: z.string().optional(), // Phone number is optional
+  fundraisingContact: z.boolean().refine((val) => val === true, {
+    message: "You must consent to fundraising contact to access the pitch deck.",
+  }),
+  dataHandling: z.boolean().refine((val) => val === true, {
+    message: "You must consent to data handling to access the pitch deck.",
+  }),
 });
 
 interface PitchDeckFormProps {
@@ -37,6 +45,8 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
       name: "",
       email: "",
       phone: "",
+      fundraisingContact: false,
+      dataHandling: false,
     },
   });
 
@@ -44,7 +54,7 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
     console.log("Form submitted:", values);
     // In a real application, you would send this data to a backend.
     // For this example, we'll just grant access immediately.
-    showSuccess("Thank you! You now have access to the pitch deck.");
+    showSuccess("Thank you! Your consent has been recorded and you now have access to the pitch deck.");
     onAccessGranted();
   };
 
@@ -56,12 +66,15 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
         <div className="absolute bottom-[-150px] right-[-150px] w-[400px] h-[400px] bg-gradient-to-r from-blue-400/10 to-cyan-400/10 rounded-full blur-3xl"></div>
       </div>
 
+      {/* Animated Background Elements */}
+      <AnimatedBackground />
+
       {/* Form Container */}
       <div className="relative z-10 w-full max-w-md">
         {/* Logo Header */}
         <div className="text-center mb-8">
           <img
-            src="https://z-cdn-media.chatglm.cn/files/a6735ff9-1e2b-4cba-b0a3-2e4e50a5af33_logo.png.png?auth_key=1790171439-d2f879595c5640b2bd9030d45fc9b9d6-0-793df07e36ebfc08f202946421960f09"
+            src="/scalix-logo.png"
             alt="Scalix World Logo"
             className="w-20 h-auto mx-auto mb-4 filter drop-shadow-lg"
           />
@@ -69,7 +82,17 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
             Access Pitch Deck
           </h1>
           <p className="text-gray-300 text-sm">
-            Please fill out the form below to view and download our pitch deck.
+            Please fill out the form below and provide consent to view and download our pitch deck. 
+            By submitting this form, you agree to our{" "}
+            <a 
+              href="/privacy-policy" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:underline"
+            >
+              Privacy Policy
+            </a>
+            .
           </p>
         </div>
 
@@ -126,6 +149,67 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
                         className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl h-12"
                       />
                     </FormControl>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+              
+              {/* Fundraising Contact Consent */}
+              <FormField
+                control={form.control}
+                name="fundraisingContact"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="mt-1 border-white/20 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-white font-medium text-sm">
+                        I consent to Scalix World contacting me regarding our fundraising activities
+                      </FormLabel>
+                      <p className="text-gray-400 text-xs">
+                        We may reach out to you via the provided contact information to discuss investment opportunities and fundraising updates.
+                      </p>
+                    </div>
+                    <FormMessage className="text-red-400" />
+                  </FormItem>
+                )}
+              />
+
+              {/* Data Handling Consent */}
+              <FormField
+                control={form.control}
+                name="dataHandling"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="mt-1 border-white/20 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-white font-medium text-sm">
+                        I consent to the safe handling of my personal data
+                      </FormLabel>
+                      <p className="text-gray-400 text-xs">
+                        Your data will be processed securely and in accordance with our{" "}
+                        <a 
+                          href="/privacy-policy" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline"
+                        >
+                          privacy policy
+                        </a>
+                        . We will not share your information with third parties without your explicit consent.
+                      </p>
+                    </div>
                     <FormMessage className="text-red-400" />
                   </FormItem>
                 )}

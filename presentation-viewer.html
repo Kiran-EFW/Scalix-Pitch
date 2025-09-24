@@ -7,8 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     
-    <!-- Libraries for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- PDF generation libraries disabled - using static PDF download -->
     <style>
         * {
             margin: 0;
@@ -359,6 +358,67 @@
             padding: 10px 15px;
             z-index: 1000;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .floating-controls.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Show controls on hover */
+        .slide-viewer:hover .floating-controls {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Edge navigation buttons */
+        .edge-nav-left, .edge-nav-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .edge-nav-left {
+            left: 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .edge-nav-right {
+            right: 0;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .edge-nav-left:hover, .edge-nav-right:hover {
+            background: rgba(79, 172, 254, 0.2);
+            opacity: 1;
+        }
+
+        .slide-viewer:hover .edge-nav-left,
+        .slide-viewer:hover .edge-nav-right {
+            opacity: 0.7;
+        }
+
+        .edge-nav-left i, .edge-nav-right i {
+            font-size: 24px;
+            color: #4facfe;
         }
 
         .floating-slide-counter {
@@ -510,7 +570,7 @@
         <!-- Header with controls -->
         <div class="presentation-header">
             <div class="logo-section">
-                <img src="https://z-cdn-media.chatglm.cn/files/a6735ff9-1e2b-4cba-b0a3-2e4e50a5af33_logo.png.png?auth_key=1790171439-d2f879595c5640b2bd9030d45fc9b9d6-0-793df07e36ebfc08f202946421960f09" alt="Scalix World Logo" class="logo">
+                <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
                 <div class="presentation-title">Scalix World - Investor Presentation</div>
             </div>
             
@@ -537,6 +597,14 @@
 
         <!-- Main slide viewer -->
         <div class="slide-viewer">
+            <!-- Edge navigation buttons -->
+            <div class="edge-nav-left" onclick="previousSlide()">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="edge-nav-right" onclick="nextSlide()">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+            
             <!-- Floating navigation controls -->
             <div class="floating-controls">
                 <div class="floating-slide-counter">
@@ -727,9 +795,23 @@
         function showFloatingControls() {
             const controls = document.querySelector('.floating-controls');
             if (controls) {
-                controls.classList.add('show-on-keypress');
+                controls.classList.add('show');
                 setTimeout(() => {
-                    controls.classList.remove('show-on-keypress');
+                    controls.classList.remove('show');
+                }, 3000); // Show for 3 seconds
+            }
+        }
+
+        // Show edge navigation buttons temporarily
+        function showEdgeNavigation() {
+            const leftNav = document.querySelector('.edge-nav-left');
+            const rightNav = document.querySelector('.edge-nav-right');
+            if (leftNav && rightNav) {
+                leftNav.style.opacity = '0.8';
+                rightNav.style.opacity = '0.8';
+                setTimeout(() => {
+                    leftNav.style.opacity = '0';
+                    rightNav.style.opacity = '0';
                 }, 3000); // Show for 3 seconds
             }
         }
@@ -779,6 +861,11 @@
             // Show floating controls in fullscreen mode when any key is pressed
             if (document.fullscreenElement) {
                 showFloatingControls();
+            }
+            
+            // Show edge navigation when arrow keys are pressed
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === ' ') {
+                showEdgeNavigation();
             }
             
             switch(e.key) {

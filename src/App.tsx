@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PitchDeckPage from "./pages/PitchDeckPage"; // Import the new page
+import PrivacyPolicy from "./pages/PrivacyPolicy"; // Import privacy policy page
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/pitch-deck" element={<PitchDeckPage />} /> {/* Add the new route */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* Privacy policy route */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
