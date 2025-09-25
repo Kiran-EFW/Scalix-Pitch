@@ -49,14 +49,43 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
       dataHandling: false,
     },
   });
+const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  console.log("Form submitted:", values);
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Form submitted:", values);
+  // Replace YOUR-PROJECT-ID with your actual Firebase Project ID
+  const functionUrl = 'https://us-central1-scalix-pitch-deck.cloudfunctions.net/saveFormData';
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+
+    if (response.ok) {
+      console.log('Data saved successfully!');
+      showSuccess("Thank you! Your consent has been recorded and you now have access to the pitch deck.");
+      onAccessGranted(); // Grant access after a successful submission
+    } else {
+      console.error('Failed to save data. Status:', response.status);
+      showError("There was an error saving your data. Please try again.");
+    }
+  } catch (error) {
+    console.error('Network or server error:', error);
+    showError("Network error. Please check your connection and try again.");
+  }
+};
+
+
+//  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  //  console.log("Form submitted:", values);
     // In a real application, you would send this data to a backend.
     // For this example, we'll just grant access immediately.
-    showSuccess("Thank you! Your consent has been recorded and you now have access to the pitch deck.");
-    onAccessGranted();
-  };
+//    showSuccess("Thank you! Your consent has been recorded and you now have access to the pitch deck.");
+ //   onAccessGranted();
+ // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#0a0e27] to-[#1a237e] flex items-center justify-center p-4 relative overflow-hidden">

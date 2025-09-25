@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual Revenue Streams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+        .glass-morphism {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            filter: blur(40px);
+            z-index: 1;
+        }
+        .glass-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+        .glass-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+        }
+        .header {
+            padding: 20px 50px 10px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 0 50px 20px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 80px);
+        }
+        .business-model-container {
+            display: flex;
+            gap: 20px;
+            height: 100%;
+        }
+        .subscription-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .model-column {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+        }
+        .subscription-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .model-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .card-title i {
+            font-size: 22px;
+            color: #4facfe;
+            margin-right: 10px;
+        }
+        .tiers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .tier-item {
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            transition: transform 0.3s ease;
+        }
+        .tier-item:hover {
+            transform: translateY(-3px);
+        }
+        .tier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .tier-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .tier-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #4facfe;
+        }
+        .tier-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tier-feature {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 4px 8px;
+        }
+        .tier-feature i {
+            font-size: 12px;
+            color: #4facfe;
+            margin-right: 4px;
+        }
+        .tier-feature-text {
+            font-size: 12px;
+            color: #e0e7ff;
+        }
+        .revenue-projections {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .year-column {
+            flex: 1;
+            text-align: center;
+            padding: 0 8px;
+        }
+        .year-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .year-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4facfe;
+        }
+        .unit-economics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .metric-item {
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4facfe;
+            margin-bottom: 4px;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #e0e7ff;
+        }
+        .business-model-diagram {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .model-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+            padding: 15px 0;
+        }
+        .model-step {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .model-step:last-child {
+            margin-bottom: 0;
+        }
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-icon i {
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .step-content {
+            flex-grow: 1;
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+        .step-description {
+            font-size: 12px;
+            color: #e0e7ff;
+        }
+        .model-arrow {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 4px 0;
+        }
+        .model-arrow i {
+            font-size: 20px;
+            color: #4facfe;
+        }
+        .chart-container {
+            height: 160px;
+            position: relative;
+        }
+        .highlight {
+            color: #4facfe;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="background-overlay"></div>
+        <div class="glass-morphism glass-1"></div>
+        <div class="glass-morphism glass-2"></div>
+        
+        <div class="header">
+            <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
+            <h1 class="title">Dual Revenue Streams</h1>
+            <div></div>
+        </div>
+        
+        <div class="content">
+            <div class="business-model-container">
+                <div class="subscription-column">
+                    <div class="subscription-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-crown"></i>
+                            Subscription Tiers
+                        </h3>
+                        
+                        <div class="tiers-container">
+                            <div class="tier-item">
+                                <div class="tier-header">
+                                    <div class="tier-name">Free</div>
+                                </div>
+                                <div class="tier-features">
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">3 Projects</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">10K AI tokens/mo</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">1GB storage</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tier-item">
+                                <div class="tier-header">
+                                    <div class="tier-name">Pro</div>
+                                    <div class="tier-price">TBD</div>
+                                </div>
+                                <div class="tier-features">
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">50 Projects</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">200K AI tokens/mo</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">10GB storage</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">5 team members</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tier-item">
+                                <div class="tier-header">
+                                    <div class="tier-name">Enterprise</div>
+                                    <div class="tier-price">Custom</div>
+                                </div>
+                                <div class="tier-features">
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">Unlimited everything</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">Dedicated support</span>
+                                    </div>
+                                    <div class="tier-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="tier-feature-text">Custom integrations</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subscription-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line"></i>
+                            Revenue Projections
+                        </h3>
+                        
+                        <div class="revenue-projections">
+                            <div class="year-column">
+                                <div class="year-label">Year 1</div>
+                                <div class="year-value">$2.5M</div>
+                            </div>
+                            
+                            <div class="year-column">
+                                <div class="year-label">Year 2</div>
+                                <div class="year-value">$12M</div>
+                            </div>
+                            
+                            <div class="year-column">
+                                <div class="year-label">Year 3</div>
+                                <div class="year-value">$50M</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-column">
+                    <div class="model-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-sitemap"></i>
+                            Business Model
+                        </h3>
+                        
+                        <div class="business-model-diagram">
+                            <div class="model-flow">
+                                <div class="model-step">
+                                    <div class="step-icon">
+                                        <i class="fas fa-boxes"></i>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="step-title">Bulk AI Credits Acquisition</div>
+                                        <div class="step-description">Purchase wholesale from data centers</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="model-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                
+                                <div class="model-step">
+                                    <div class="step-icon">
+                                        <i class="fas fa-route"></i>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="step-title">Intelligent Routing System</div>
+                                        <div class="step-description">Optimal AI systems at best cost for Indian market</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="model-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                
+                                <div class="model-step">
+                                    <div class="step-icon">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="step-title">Premium Pricing Model</div>
+                                        <div class="step-description">Sell at premium with added value & convenience</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="model-arrow">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                
+                                <div class="model-step">
+                                    <div class="step-icon">
+                                        <i class="fas fa-images"></i>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="step-title">Future Products</div>
+                                        <div class="step-description">Image & video generation with optimized routing</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            const revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11', 'Q12'],
+                    datasets: [
+                        {
+                            label: 'Revenue ($M)',
+                            data: [0.2, 0.4, 0.6, 0.8, 1.2, 1.8, 2.5, 3.5, 5, 7, 9, 12],
+                            borderColor: '#4facfe',
+                            backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#b8c5ff',
+                                font: {
+                                    size: 10
+                                },
+                                callback: function(value) {
+                                    return '$' + value + 'M';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#b8c5ff',
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 14, 39, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#e0e7ff',
+                            borderColor: '#4facfe',
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
