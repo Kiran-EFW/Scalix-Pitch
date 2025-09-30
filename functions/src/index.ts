@@ -4,11 +4,20 @@ import * as admin from "firebase-admin";
 
 admin.initializeApp();
 
+const allowedOrigins = [
+  "https://scalix-pitch-deck.web.app",
+  "https://scalix-pitch-deck.firebaseapp.com",
+  "https://pitch.scalix.world"
+];
+
 export const saveFormData = onRequest(async (request, response) => {
-  // Set CORS headers to allow requests from your website
-  response.set('Access-Control-Allow-Origin', 'https://scalix-pitch-deck.web.app');
-  response.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  response.set('Access-Control-Allow-Headers', 'Content-Type');
+  const origin = request.headers.origin;
+
+  if (origin && allowedOrigins.includes(origin)) {
+    response.set("Access-Control-Allow-Origin", origin);
+  }
+  response.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+  response.set("Access-Control-Allow-Headers", "Content-Type");
 
   // Handle preflight requests
   if (request.method === 'OPTIONS') {

@@ -60,6 +60,23 @@ const Index = () => {
             </div>
           </div>
 
+          {/* YouTube Video Section */}
+          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8 max-w-4xl mx-auto shadow-2xl mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
+              Watch Our Story
+            </h2>
+            <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl">
+              <iframe
+                src="https://www.youtube.com/embed/LPf5uxztRIc"
+                title="Scalix World - Desktop-First AI Development Platform"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
+            </div>
+          </div>
+
           {/* CTA Section */}
           <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8 max-w-2xl mx-auto shadow-2xl">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">

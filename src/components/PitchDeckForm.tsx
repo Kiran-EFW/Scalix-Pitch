@@ -173,7 +173,7 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
                     <FormControl>
                       <Input
                         type="tel"
-                        placeholder="+44 7553 879404"
+                        placeholder="Your Phone Number"
                         {...field}
                         className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 focus:ring-blue-400/20 rounded-xl h-12"
                       />
