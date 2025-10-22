@@ -222,7 +222,7 @@ const PrivacyPolicy = () => {
                   </div>
                   <div>
                     <strong className="text-white">Company:</strong> 
-                    <span className="text-gray-300 ml-2">XENOLIX TECHNOLOGIES PVT LTD</span>
+                    <span className="text-gray-300 ml-2">ENERGY FW LTD</span>
                   </div>
                 </div>
               </div>
@@ -234,7 +234,7 @@ const PrivacyPolicy = () => {
         <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-lg border border-white/10 rounded-full px-4 py-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-gray-300 text-xs font-medium">XENOLIX TECHNOLOGIES PVT LTD</span>
+            <span className="text-gray-300 text-xs font-medium">ENERGY FW LTD</span>
           </div>
           <p className="text-gray-400 text-sm mt-4">
             © 2024 Scalix World • Founded by Kiran Ravi Kumar

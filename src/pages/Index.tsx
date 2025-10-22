@@ -103,7 +103,7 @@ const Index = () => {
           {/* Company Badge */}
           <div className="mt-8 inline-flex items-center gap-3 bg-white/5 backdrop-blur-lg border border-white/10 rounded-full px-6 py-3">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-gray-300 text-sm font-medium">XENOLIX TECHNOLOGIES PVT LTD</span>
+            <span className="text-gray-300 text-sm font-medium">ENERGY FW LTD</span>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ const Index = () => {
       {/* Footer */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
         <div className="flex items-center gap-4 text-gray-400 text-sm">
-          <span>© 2024 Scalix World</span>
+            <span>© 2024 Scalix World</span>
           <span>•</span>
           <span>Founded by Kiran Ravi Kumar</span>
         </div>

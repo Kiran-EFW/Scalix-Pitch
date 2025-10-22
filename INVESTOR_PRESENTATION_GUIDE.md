@@ -140,4 +140,4 @@
 ---
 
 **Contact:** Kiran Ravi Kumar - team@scalix.world | +44 7553879404
-**Company:** XENOLIX TECHNOLOGIES PVT LTD
+**Company:** ENERGY FW LTD

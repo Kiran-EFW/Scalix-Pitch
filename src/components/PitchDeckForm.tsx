@@ -52,7 +52,15 @@ const PitchDeckForm: React.FC<PitchDeckFormProps> = ({ onAccessGranted }) => {
 const onSubmit = async (values: z.infer<typeof formSchema>) => {
   console.log("Form submitted:", values);
 
-  // Replace YOUR-PROJECT-ID with your actual Firebase Project ID
+  // Development mode: Skip Firebase and grant access immediately
+  if (import.meta.env.DEV) {
+    console.log('Development mode: Granting access immediately');
+    showSuccess("Thank you! Your consent has been recorded and you now have access to the pitch deck.");
+    onAccessGranted();
+    return;
+  }
+
+  // Production: Save to Firebase
   const functionUrl = 'https://us-central1-scalix-pitch-deck.cloudfunctions.net/saveFormData';
 
   try {
@@ -268,7 +276,7 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
         <div className="mt-6 text-center">
           <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-lg border border-white/10 rounded-full px-4 py-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-gray-300 text-xs font-medium">XENOLIX TECHNOLOGIES PVT LTD</span>
+            <span className="text-gray-300 text-xs font-medium">ENERGY FW LTD</span>
           </div>
         </div>
       </div>
