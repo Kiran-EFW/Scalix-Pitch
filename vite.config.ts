@@ -15,7 +15,8 @@ export default defineConfig(() => ({
     },
   },
   build: {
-    outDir: "public", // Change this line
-   },
-   publicDir: "static", // Add this line
+    outDir: "dist", // Build to dist directory
+    emptyOutDir: true, // Clear dist before building
+  },
+  publicDir: "public", // Use public as the public directory (static assets)
 }));

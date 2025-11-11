@@ -13,7 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run build
+      # Copy static files from public to dist after build
+      - run: |
+          cp -r public/* dist/ 2>/dev/null || true
+          # Ensure slides-updated directory is copied
+          if [ -d "public/slides-updated" ]; then
+            mkdir -p dist/slides-updated
+            cp -r public/slides-updated/* dist/slides-updated/
+          fi
+          # Ensure presentation-viewer.html is copied
+          if [ -f "public/presentation-viewer.html" ]; then
+            cp public/presentation-viewer.html dist/
+          fi
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
