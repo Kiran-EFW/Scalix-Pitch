@@ -22,3 +22,23 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase
+.firebase/
+.firebaserc.local
+
+# Build artifacts
+public/assets/
+
+# Cache files
+*.cache
+.eslintcache
+
+# Temporary files
+*.bak
+*.tmp
+*~
+git-status-backup.txt
+
+# Playwright
+.playwright-mcp/
