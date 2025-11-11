@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Scalix Will Win</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+        .glass-morphism {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            filter: blur(40px);
+            z-index: 1;
+        }
+        .glass-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+        .glass-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+        }
+        .header {
+            padding: 20px 50px 10px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 0 50px 20px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 80px);
+        }
+        .advantages-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .advantage-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        .advantage-card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+        .card-icon i {
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .advantage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+        .advantage-item:hover {
+            transform: translateY(-3px);
+        }
+        .advantage-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(79, 172, 254, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4facfe;
+            flex-shrink: 0;
+        }
+        .advantage-text {
+            font-size: 14px;
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+        .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+        .competition-container {
+            flex-grow: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .competition-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .competition-title i {
+            font-size: 22px;
+            color: #4facfe;
+            margin-right: 10px;
+        }
+        .matrix-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            flex-grow: 1;
+        }
+        .matrix-quadrant {
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .quadrant-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .quadrant-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .competitors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            flex-grow: 1;
+        }
+        .competitor-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+        .competitor-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .competitor-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .competitor-logo i {
+            font-size: 16px;
+            color: #e0e7ff;
+        }
+        .competitor-name {
+            font-size: 14px;
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+        .scalix-quadrant {
+            background: rgba(79, 172, 254, 0.2);
+            border: 2px solid rgba(79, 172, 254, 0.5);
+        }
+        .scalix-item {
+            background: rgba(79, 172, 254, 0.2);
+        }
+        .scalix-logo {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .scalix-logo i {
+            color: #ffffff;
+        }
+        .scalix-name {
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .axis-label {
+            position: absolute;
+            font-size: 12px;
+            font-weight: 600;
+            color: #b8c5ff;
+        }
+        .x-axis-left {
+            bottom: -5px;
+            left: 25%;
+            transform: translateX(-50%);
+        }
+        .x-axis-right {
+            bottom: -5px;
+            left: 75%;
+            transform: translateX(-50%);
+        }
+        .y-axis-top {
+            top: 25%;
+            left: -5px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+        }
+        .y-axis-bottom {
+            top: 75%;
+            left: -5px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="background-overlay"></div>
+        <div class="glass-morphism glass-1"></div>
+        <div class="glass-morphism glass-2"></div>
+        
+        <div class="header">
+            <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
+            <h1 class="title">Why Scalix Will Win</h1>
+            <div></div>
+        </div>
+        
+        <div class="content">
+            <div class="advantages-container">
+                <div class="advantage-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h2 class="card-title">Technical Moats</h2>
+                    </div>
+                    
+                    <div class="advantage-list">
+                        <div class="advantage-item">
+                            <div class="advantage-number">1</div>
+                            <span class="advantage-text"><span class="highlight">Desktop-First Architecture</span> - Unique local processing</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">2</div>
+                            <span class="advantage-text"><span class="highlight">Privacy Innovation</span> - First-mover in secure AI</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">3</div>
+                            <span class="advantage-text"><span class="highlight">Cross-Platform Excellence</span> - Native on all OS</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">4</div>
+                            <span class="advantage-text"><span class="highlight">Real-Time Sync</span> - Proprietary technology</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h2 class="card-title">Business Moats</h2>
+                    </div>
+                    
+                    <div class="advantage-list">
+                        <div class="advantage-item">
+                            <div class="advantage-number">1</div>
+                            <span class="advantage-text"><span class="highlight">Network Effects</span> - Growing ecosystem</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">2</div>
+                            <span class="advantage-text"><span class="highlight">Developer Loyalty</span> - High switching costs</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">3</div>
+                            <span class="advantage-text"><span class="highlight">Brand Trust</span> - Privacy-first positioning</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">4</div>
+                            <span class="advantage-text"><span class="highlight">Enterprise Relationships</span> - Long-term contracts</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h2 class="card-title">First-Mover Advantages</h2>
+                    </div>
+                    
+                    <div class="advantage-list">
+                        <div class="advantage-item">
+                            <div class="advantage-number">1</div>
+                            <span class="advantage-text"><span class="highlight">Patent Protection</span> - Hybrid architecture</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">2</div>
+                            <span class="advantage-text"><span class="highlight">Developer Mindshare</span> - Early evangelists</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">3</div>
+                            <span class="advantage-text"><span class="highlight">Data Assets</span> - Usage patterns & metrics</span>
+                        </div>
+                        
+                        <div class="advantage-item">
+                            <div class="advantage-number">4</div>
+                            <span class="advantage-text"><span class="highlight">Integration Network</span> - AI provider partnerships</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="competition-container">
+                <h3 class="competition-title">
+                    <i class="fas fa-chess-board"></i>
+                    Competitive Landscape
+                </h3>
+                
+                <div class="matrix-container">
+                    <div class="matrix-quadrant scalix-quadrant">
+                        <div class="quadrant-header">
+                            <h4 class="quadrant-title">Local-first + Developer Control</h4>
+                        </div>
+                        <div class="competitors-grid">
+                            <div class="competitor-item scalix-item">
+                                <div class="competitor-logo scalix-logo">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="competitor-name scalix-name">Scalix</span>
+                            </div>
+                        </div>
+                        <div class="axis-label y-axis-top">Developer Control</div>
+                    </div>
+                    
+                    <div class="matrix-quadrant">
+                        <div class="quadrant-header">
+                            <h4 class="quadrant-title">Cloud-first + Developer Control</h4>
+                        </div>
+                        <div class="competitors-grid">
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <span class="competitor-name">Replit</span>
+                            </div>
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <span class="competitor-name">Firebase Studio</span>
+                            </div>
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fab fa-github"></i>
+                                </div>
+                                <span class="competitor-name">GitHub Spark</span>
+                            </div>
+                        </div>
+                        <div class="axis-label x-axis-right">Cloud-first</div>
+                    </div>
+                    
+                    <div class="matrix-quadrant">
+                        <div class="quadrant-header">
+                            <h4 class="quadrant-title">Local-first + Consumer</h4>
+                        </div>
+                        <div class="competitors-grid">
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <span class="competitor-name">Bolt.new</span>
+                            </div>
+                        </div>
+                        <div class="axis-label x-axis-left">Local-first</div>
+                    </div>
+                    
+                    <div class="matrix-quadrant">
+                        <div class="quadrant-header">
+                            <h4 class="quadrant-title">Cloud-first + Consumer/Automation</h4>
+                        </div>
+                        <div class="competitors-grid">
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-cloud"></i>
+                                </div>
+                                <span class="competitor-name">Salesforce Einstein</span>
+                            </div>
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <span class="competitor-name">Base44</span>
+                            </div>
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-magic"></i>
+                                </div>
+                                <span class="competitor-name">Vondy</span>
+                            </div>
+                            <div class="competitor-item">
+                                <div class="competitor-logo">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <span class="competitor-name">Lovable.dev</span>
+                            </div>
+                        </div>
+                        <div class="axis-label y-axis-bottom">Consumer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

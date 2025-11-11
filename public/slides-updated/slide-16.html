@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Watch Our Videos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+        .glass-morphism {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            filter: blur(40px);
+            z-index: 1;
+        }
+        .glass-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+        .glass-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px 40px;
+        }
+        .logo-container {
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .logo {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(79, 172, 254, 0.5));
+        }
+        .thank-you-title {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+            letter-spacing: -1px;
+        }
+        .subtitle {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            color: #e0e7ff;
+            max-width: 600px;
+            line-height: 1.4;
+        }
+        .videos-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        .video-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            transition: transform 0.3s ease;
+        }
+        .video-card:hover .video-icon {
+            transform: scale(1.1);
+        }
+        .video-icon i {
+            font-size: 36px;
+            color: #ffffff;
+        }
+        .video-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .video-description {
+            font-size: 16px;
+            color: #b8c5ff;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .watch-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .watch-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+        .contact-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 25px 40px;
+            margin-top: 20px;
+        }
+        .founder-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        .contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        .contact-address {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #b8c5ff;
+        }
+        .contact-item i {
+            font-size: 18px;
+            color: #4facfe;
+        }
+        .company-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+        .company-badge i {
+            color: #4facfe;
+            font-size: 16px;
+        }
+        .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="background-overlay"></div>
+        <div class="glass-morphism glass-1"></div>
+        <div class="glass-morphism glass-2"></div>
+        
+        <div class="content">
+            <div class="logo-container">
+                <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
+            </div>
+            
+            <h1 class="thank-you-title">Thank You!</h1>
+            <p class="subtitle">Watch our pitch video and product demo to learn more about Scalix World</p>
+            
+            <div class="videos-container">
+                <div class="video-card" onclick="openYouTubeVideo()">
+                    <div class="video-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3 class="video-title">Pitch Video</h3>
+                    <p class="video-description">Watch our complete investor pitch presentation on YouTube</p>
+                    <a href="#" class="watch-button" onclick="openYouTubeVideo(); return false;">
+                        <i class="fab fa-youtube"></i> Watch on YouTube
+                    </a>
+                </div>
+                
+                <div class="video-card" onclick="openDemoVideo()">
+                    <div class="video-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <h3 class="video-title">Product Demo</h3>
+                    <p class="video-description">See Scalix World in action with our interactive product demonstration</p>
+                    <a href="#" class="watch-button" onclick="openDemoVideo(); return false;">
+                        <i class="fas fa-play"></i> Watch Demo
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-info">
+                <div class="founder-name">Kiran Ravi Kumar - Founder & CEO</div>
+                <div class="contact">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>team@scalix.world</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+44 7553879404</span>
+                    </div>
+                </div>
+                <div class="contact-address">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>14600160, 5 Brayford Square, London, England and Wales, E1 0SG</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="company-badge">
+            <i class="fas fa-building"></i>
+            <span>ENERGY FW LTD</span>
+        </div>
+    </div>
+    
+    <script>
+        function openYouTubeVideo() {
+            // Replace with actual YouTube video URL
+            const youtubeUrl = "https://www.youtube.com/watch?v=YOUR_VIDEO_ID";
+            window.open(youtubeUrl, '_blank');
+        }
+        
+        function openDemoVideo() {
+            // Replace with actual demo video URL
+            const demoUrl = "https://www.youtube.com/watch?v=YOUR_DEMO_VIDEO_ID";
+            window.open(demoUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

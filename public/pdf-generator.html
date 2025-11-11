@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Generator - Scalix Pitch Deck</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        button {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #00f2fe;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .progress {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Scalix Pitch Deck PDF Generator</h1>
+        <p>This tool will capture each slide and generate a high-quality PDF.</p>
+        
+        <div class="status" id="status">
+            Ready to generate PDF. Click the button below to start.
+        </div>
+        
+        <div class="progress" style="display: none;" id="progressContainer">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+        
+        <button id="generateBtn" onclick="generatePDF()">Generate PDF</button>
+        <button onclick="window.open('/combined-slides-for-pdf.html', '_blank')">Preview Slides</button>
+        
+        <iframe id="slideFrame" src="/combined-slides-for-pdf.html" style="width: 100%; height: 600px; border: 1px solid #ddd; margin-top: 20px; display: none;"></iframe>
+    </div>
+
+    <script>
+        async function generatePDF() {
+            const btn = document.getElementById('generateBtn');
+            const status = document.getElementById('status');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const slideFrame = document.getElementById('slideFrame');
+            
+            btn.disabled = true;
+            progressContainer.style.display = 'block';
+            slideFrame.style.display = 'block';
+            
+            try {
+                status.textContent = 'Loading slides...';
+                progressBar.style.width = '10%';
+                progressBar.textContent = '10%';
+                
+                // Wait for iframe to load
+                await new Promise(resolve => {
+                    slideFrame.onload = () => {
+                        setTimeout(resolve, 5000); // Wait 5 seconds for content
+                    };
+                });
+                
+                status.textContent = 'Capturing slides...';
+                progressBar.style.width = '20%';
+                progressBar.textContent = '20%';
+                
+                const iframe = slideFrame;
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Wait for all resources
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                
+                const slides = iframeDoc.querySelectorAll('.slide-page');
+                const totalSlides = slides.length;
+                
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'px',
+                    format: [1280, 720]
+                });
+                
+                for (let i = 0; i < totalSlides; i++) {
+                    status.textContent = `Processing slide ${i + 1} of ${totalSlides}...`;
+                    const progress = 20 + ((i + 1) / totalSlides) * 70;
+                    progressBar.style.width = progress + '%';
+                    progressBar.textContent = Math.round(progress) + '%';
+                    
+                    const slide = slides[i];
+                    
+                    // Scroll to slide
+                    slide.scrollIntoView();
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // Capture slide
+                    const canvas = await html2canvas(slide, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#0a0e27',
+                        logging: false,
+                        width: 1280,
+                        height: 720
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    if (i > 0) {
+                        pdf.addPage([1280, 720], 'landscape');
+                    }
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, 1280, 720);
+                }
+                
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+                status.textContent = 'Saving PDF...';
+                
+                pdf.save('Scalix-Pitch-Deck.pdf');
+                
+                status.textContent = '✅ PDF generated successfully!';
+                status.style.background = '#c8e6c9';
+                status.style.color = '#2e7d32';
+                
+            } catch (error) {
+                status.textContent = '❌ Error: ' + error.message;
+                status.style.background = '#ffcdd2';
+                status.style.color = '#c62828';
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                progressContainer.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+
