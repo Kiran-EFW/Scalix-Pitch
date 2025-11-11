@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeking $250k Pre-Seed Investment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+        .glass-morphism {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            filter: blur(40px);
+            z-index: 1;
+        }
+        .glass-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+        .glass-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 0 70px 30px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 100px);
+        }
+        .investment-container {
+            display: flex;
+            gap: 25px;
+            flex-grow: 1;
+        }
+        .left-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .right-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .investment-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .card-title i {
+            font-size: 22px;
+            color: #4facfe;
+            margin-right: 10px;
+        }
+        .offer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+        .offer-item {
+            display: flex;
+            align-items: flex-start;
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            transition: transform 0.3s ease;
+        }
+        .offer-item:hover {
+            transform: translateY(-3px);
+        }
+        .offer-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .offer-icon i {
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .offer-content {
+            flex-grow: 1;
+        }
+        .offer-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .offer-description {
+            font-size: 14px;
+            color: #b8c5ff;
+        }
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            transition: transform 0.3s ease;
+        }
+        .milestone-item:hover {
+            transform: translateY(-3px);
+        }
+        .milestone-status {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .completed {
+            background: rgba(76, 175, 80, 0.2);
+        }
+        .completed i {
+            color: #4caf50;
+        }
+        .in-progress {
+            background: rgba(255, 193, 7, 0.2);
+        }
+        .in-progress i {
+            color: #ffc107;
+        }
+        .milestone-text {
+            font-size: 16px;
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+        .why-now-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            flex-grow: 1;
+        }
+        .why-item {
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .why-item:hover {
+            transform: translateY(-5px);
+        }
+        .why-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .why-icon i {
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .why-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+        .why-description {
+            font-size: 14px;
+            color: #b8c5ff;
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            border-radius: 16px;
+            border: 1px solid rgba(79, 172, 254, 0.5);
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        .highlight-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .highlight-text {
+            font-size: 16px;
+            color: #e0e7ff;
+        }
+        .inr-amount {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .inr-logo {
+            width: 20px;
+            height: 20px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="background-overlay"></div>
+        <div class="glass-morphism glass-1"></div>
+        <div class="glass-morphism glass-2"></div>
+        
+        <div class="header">
+            <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
+            <h1 class="title">Seeking $250k Pre-Seed Investment</h1>
+            <div></div>
+        </div>
+        
+        <div class="content">
+            <div class="investment-container">
+                <div class="left-column">
+                    <div class="investment-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-handshake"></i>
+                            What We Offer Investors
+                        </h3>
+                        
+                        <div class="offer-list">
+                            <div class="offer-item">
+                                <div class="offer-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div class="offer-content">
+                                    <h4 class="offer-title">Equity Stake</h4>
+                                    <p class="offer-description">Competitive terms for early-stage investment</p>
+                                </div>
+                            </div>
+                            
+                            <div class="offer-item">
+                                <div class="offer-icon">
+                                    <i class="fas fa-network-wired"></i>
+                                </div>
+                                <div class="offer-content">
+                                    <h4 class="offer-title">Strategic Partnership</h4>
+                                    <p class="offer-description">Access to investor network and expertise</p>
+                                </div>
+                            </div>
+                            
+                            <div class="offer-item">
+                                <div class="offer-icon">
+                                    <i class="fas fa-door-open"></i>
+                                </div>
+                                <div class="offer-content">
+                                    <h4 class="offer-title">Exit Potential</h4>
+                                    <p class="offer-description">Clear path to acquisition or IPO in high-growth market</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="investment-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-flag-checkered"></i>
+                            Milestones for Seed Round
+                        </h3>
+                        
+                        <div class="milestones-list">
+                            <div class="milestone-item">
+                                <div class="milestone-status completed">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <span class="milestone-text">Product fully functional and tested</span>
+                            </div>
+                            
+                            <div class="milestone-item">
+                                <div class="milestone-status completed">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <span class="milestone-text">Revenue model validated</span>
+                            </div>
+                            
+                            <div class="milestone-item">
+                                <div class="milestone-status in-progress">
+                                    <i class="fas fa-sync-alt"></i>
+                                </div>
+                                <span class="milestone-text">Ready for market launch and scaling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="right-column">
+                    <div class="investment-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-hourglass-half"></i>
+                            Why Now?
+                        </h3>
+                        
+                        <div class="why-now-list">
+                            <div class="why-item">
+                                <div class="why-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h4 class="why-title">Market Inflection Point</h4>
+                                <p class="why-description">AI development tools market at critical growth stage</p>
+                            </div>
+                            
+                            <div class="why-item">
+                                <div class="why-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h4 class="why-title">Privacy Concerns</h4>
+                                <p class="why-description">Growing demand for local processing solutions</p>
+                            </div>
+                            
+                            <div class="why-item">
+                                <div class="why-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <h4 class="why-title">First-Mover Advantage</h4>
+                                <p class="why-description">Leading the desktop AI development space</p>
+                            </div>
+                            
+                            <div class="why-item">
+                                <div class="why-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h4 class="why-title">Team Ready</h4>
+                                <p class="why-description">Experienced team with product ready for growth</p>
+                            </div>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <div class="highlight-amount">$250,000</div>
+                            <div class="highlight-text">Pre-Seed Investment Opportunity</div>
+                            <div class="inr-amount">
+                                <div class="inr-logo">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </div>
+                                ₹2.07 Cr
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

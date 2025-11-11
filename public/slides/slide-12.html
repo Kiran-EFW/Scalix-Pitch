@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World-Class Team</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Preload critical images -->
+    <link rel="preload" as="image" href="https://sfile.chatglm.cn/images-ppt/7d322886cb8f.jpg">
+    <link rel="preload" as="image" href="https://sfile.chatglm.cn/images-ppt/b0dec1fc5c52.jpg">
+    <link rel="preload" as="image" href="https://sfile.chatglm.cn/images-ppt/85d2b594c8d8.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+        .glass-morphism {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            filter: blur(40px);
+            z-index: 1;
+        }
+        .glass-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+        .glass-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 0 70px 30px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 100px);
+        }
+        .team-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 25px;
+            flex-grow: 1;
+        }
+        .team-member {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid rgba(79, 172, 254, 0.5);
+            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .member-image.loading {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .member-image.error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        .team-member:hover .member-image {
+            transform: scale(1.05);
+        }
+        .member-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .member-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #4facfe;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .member-bio {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .bio-item {
+            display: flex;
+            align-items: flex-start;
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+        .bio-item:hover {
+            transform: translateY(-3px);
+            background: rgba(79, 172, 254, 0.2);
+        }
+        .bio-icon {
+            font-size: 16px;
+            color: #4facfe;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .bio-text {
+            font-size: 14px;
+            color: #e0e7ff;
+            text-align: left;
+            font-weight: 500;
+        }
+        .linkedin-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .linkedin-logo {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .linkedin-logo:hover {
+            transform: scale(1.1);
+            background: rgba(0, 119, 181, 0.3);
+        }
+        .linkedin-logo i {
+            font-size: 20px;
+            color: #0077B5;
+        }
+        .highlight {
+            color: #4facfe;
+            font-weight: 600;
+        }
+        .tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(79, 172, 254, 0.2);
+            color: #4facfe;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 15px;
+            text-transform: uppercase;
+        }
+    </style>
+    <script>
+        // Image loading optimization
+        function optimizeImageLoading() {
+            const images = document.querySelectorAll('.member-image');
+            
+            images.forEach((img, index) => {
+                // Add loading class initially
+                img.classList.add('loading');
+                
+                // Set up image loading handlers
+                const imageElement = new Image();
+                
+                imageElement.onload = function() {
+                    img.src = this.src;
+                    img.classList.remove('loading');
+                    img.classList.add('loaded');
+                };
+                
+                imageElement.onerror = function() {
+                    img.classList.remove('loading');
+                    img.classList.add('error');
+                    // Show initials as fallback
+                    const name = img.alt || 'Team Member';
+                    const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                    img.style.display = 'flex';
+                    img.innerHTML = initials;
+                };
+                
+                // Set timeout for slow loading
+                setTimeout(() => {
+                    if (img.classList.contains('loading')) {
+                        img.classList.remove('loading');
+                        img.classList.add('error');
+                        const name = img.alt || 'Team Member';
+                        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2);
+                        img.style.display = 'flex';
+                        img.innerHTML = initials;
+                    }
+                }, 3000); // 3 second timeout
+                
+                // Start loading the image
+                imageElement.src = img.src;
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', optimizeImageLoading);
+    </script>
+</head>
+<body>
+    <div class="slide">
+        <div class="background-overlay"></div>
+        <div class="glass-morphism glass-1"></div>
+        <div class="glass-morphism glass-2"></div>
+        
+        <div class="header">
+            <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
+            <h1 class="title">World-Class Team</h1>
+            <div></div>
+        </div>
+        
+        <div class="content">
+            <div class="team-container">
+                <div class="team-member">
+                    <span class="tag">Founder</span>
+                    <img src="https://sfile.chatglm.cn/images-ppt/7d322886cb8f.jpg" alt="Kiran Ravi Kumar" class="member-image" loading="eager" decoding="async">
+                    <h2 class="member-name">Kiran Ravi Kumar</h2>
+                    <h3 class="member-title">CEO & Founder</h3>
+                    <div class="member-bio">
+                        <div class="bio-item">
+                            <i class="fas fa-building bio-icon"></i>
+                            <span class="bio-text">Founder & CEO of <span class="highlight">Scalix</span> (London)</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-users bio-icon"></i>
+                            <span class="bio-text">Expert in <span class="highlight">developer community</span> building</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-chart-line bio-icon"></i>
+                            <span class="bio-text">Strong <span class="highlight">GTM experience</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <span class="tag">Operations</span>
+                    <img src="https://sfile.chatglm.cn/images-ppt/b0dec1fc5c52.jpg" alt="Vineeth Vijayprakash" class="member-image" loading="eager" decoding="async">
+                    <h2 class="member-name">Vineeth Vijayprakash</h2>
+                    <h3 class="member-title">COO</h3>
+                    <div class="member-bio">
+                        <div class="bio-item">
+                            <i class="fas fa-university bio-icon"></i>
+                            <span class="bio-text">Ex-<span class="highlight">SBI</span>, Bank of Baroda</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-shield-alt bio-icon"></i>
+                            <span class="bio-text">Deep <span class="highlight">fintech & compliance</span> expertise</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-cogs bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Operational excellence</span> in tech projects</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <span class="tag">Technology</span>
+                    <img src="https://sfile.chatglm.cn/images-ppt/85d2b594c8d8.jpeg" alt="Akhil P" class="member-image" loading="eager" decoding="async">
+                    <h2 class="member-name">Akhil P</h2>
+                    <h3 class="member-title">CTO</h3>
+                    <div class="member-bio">
+                        <div class="bio-item">
+                            <i class="fas fa-briefcase bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Software Developer(3 years exp)</span> and Diploma in Data Science,IIT Madras</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-robot bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Production AI/ML</span> deployment expert</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-microchip bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Cutting-edge technology</span> implementation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="linkedin-container">
+                <a href="https://linkedin.com/company/scalix-world" target="_blank" class="linkedin-logo">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

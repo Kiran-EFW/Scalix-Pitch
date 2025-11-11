@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolutionary Developer Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 1280px;
+            min-height: 720px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+        }
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: none;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+        }
+        .glass-morphism {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            filter: blur(40px);
+            z-index: 1;
+        }
+        .glass-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+        .glass-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+        }
+        .header {
+            padding: 30px 70px 15px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            width: 60px;
+            height: auto;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 0 70px 20px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 100px);
+            justify-content: space-between;
+        }
+        .workflow-comparison {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        .workflow-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .workflow-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .workflow-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .traditional-title {
+            color: #ff6b6b;
+        }
+        .scalix-title {
+            color: #4facfe;
+        }
+        .workflow-steps {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            transition: transform 0.3s ease;
+        }
+        .step:hover {
+            transform: translateY(-3px);
+        }
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .traditional-step .step-number {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+        .scalix-step .step-number {
+            background: rgba(79, 172, 254, 0.2);
+            color: #4facfe;
+        }
+        .step-content {
+            flex-grow: 1;
+        }
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+        .step-time {
+            font-size: 14px;
+            color: #b8c5ff;
+        }
+        .step-icon {
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+        .step-icon i {
+            font-size: 20px;
+        }
+        .traditional-step .step-icon i {
+            color: #ff6b6b;
+        }
+        .scalix-step .step-icon i {
+            color: #4facfe;
+        }
+        .innovations-container {
+            margin-top: auto;
+        }
+        .innovations-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #b8c5ff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .innovations-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .innovation-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .innovation-card:hover {
+            transform: translateY(-5px);
+        }
+        .innovation-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .innovation-icon i {
+            font-size: 24px;
+            color: #ffffff;
+        }
+        .innovation-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+        .innovation-text {
+            font-size: 12px;
+            color: #b8c5ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="background-overlay"></div>
+        <div class="glass-morphism glass-1"></div>
+        <div class="glass-morphism glass-2"></div>
+        
+        <div class="header">
+            <img src="/scalix-logo.png" alt="Scalix World Logo" class="logo">
+            <h1 class="title">Revolutionary Developer Experience</h1>
+            <div></div>
+        </div>
+        
+        <div class="content">
+            <div class="workflow-comparison">
+                <div class="workflow-column">
+                    <div class="workflow-header">
+                        <h2 class="workflow-title traditional-title">Before Scalix</h2>
+                    </div>
+                    
+                    <div class="workflow-steps">
+                        <div class="step traditional-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Configure API keys</h3>
+                                <p class="step-time">15 minutes</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step traditional-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Install dependencies</h3>
+                                <p class="step-time">20 minutes</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step traditional-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Test cloud connectivity</h3>
+                                <p class="step-time">10 minutes</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step traditional-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Handle rate limits</h3>
+                                <p class="step-time">Ongoing frustration</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step traditional-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Debug network issues</h3>
+                                <p class="step-time">Hours of troubleshooting</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-column">
+                    <div class="workflow-header">
+                        <h2 class="workflow-title scalix-title">With Scalix</h2>
+                    </div>
+                    
+                    <div class="workflow-steps">
+                        <div class="step scalix-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Download & Install</h3>
+                                <p class="step-time">2 minutes</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step scalix-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Start Building</h3>
+                                <p class="step-time">Immediate</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step scalix-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Local AI Processing</h3>
+                                <p class="step-time">Instant results</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step scalix-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Cloud Sync (when needed)</h3>
+                                <p class="step-time">Automatic</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-sync"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="step scalix-step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h3 class="step-title">Deploy Anywhere</h3>
+                                <p class="step-time">One-click</p>
+                            </div>
+                            <div class="step-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="innovations-container">
+                <h2 class="innovations-title">Key Innovations</h2>
+                
+                <div class="innovations-grid">
+                    <div class="innovation-card">
+                        <div class="innovation-icon">
+                            <i class="fas fa-hand-pointer"></i>
+                        </div>
+                        <h3 class="innovation-title">One-Click AI Integration</h3>
+                        <p class="innovation-text">Pre-configured models</p>
+                    </div>
+                    
+                    <div class="innovation-card">
+                        <div class="innovation-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3 class="innovation-title">Visual Workflow Builder</h3>
+                        <p class="innovation-text">Drag-and-drop pipelines</p>
+                    </div>
+                    
+                    <div class="innovation-card">
+                        <div class="innovation-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3 class="innovation-title">Real-Time Testing</h3>
+                        <p class="innovation-text">Instant feedback</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
