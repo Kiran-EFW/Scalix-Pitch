@@ -40,5 +40,10 @@ jobs:
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT" > $HOME/firebase-service-account.json
           export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
-          firebase deploy --only hosting --project scalix-pitch-deck
+          # Verify project access
+          firebase projects:list || echo "Warning: Could not list projects"
+          # Set the project
+          firebase use scalix-pitch-deck --non-interactive || echo "Warning: Could not set project"
+          # Deploy
+          firebase deploy --only hosting --project scalix-pitch-deck --non-interactive
           rm -f $HOME/firebase-service-account.json
