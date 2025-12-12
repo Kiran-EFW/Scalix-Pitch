@@ -66,7 +66,7 @@
             right: -150px;
         }
         .header {
-            padding: 30px 70px 15px;
+            padding: 40px 70px 20px;
             position: relative;
             z-index: 10;
             display: flex;
@@ -88,25 +88,135 @@
         .content {
             position: relative;
             z-index: 10;
-            padding: 0 70px 30px;
+            padding: 0 70px 40px;
+            height: calc(100% - 100px);
             display: flex;
             flex-direction: column;
-            height: calc(100% - 100px);
         }
-        .team-container {
+        .team-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
             display: flex;
-            justify-content: space-between;
-            gap: 25px;
+            align-items: center;
+            justify-content: center;
+        }
+        .section-title i {
+            font-size: 24px;
+            color: #4facfe;
+            margin-right: 12px;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
             flex-grow: 1;
         }
-        .team-member {
-            flex: 1;
+        .advisors-section {
+            margin: 0;
+        }
+        .advisors-box {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: 25px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+        .advisors-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .advisors-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+        .advisors-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .advisors-title i {
+            font-size: 18px;
+            color: #4facfe;
+            margin-right: 8px;
+        }
+        .advisors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+            width: 100%;
+        }
+        .advisor-item {
+            display: flex;
+            align-items: center;
+            background: rgba(79, 172, 254, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .advisor-item:hover {
+            transform: translateY(-2px);
+            background: rgba(79, 172, 254, 0.2);
+        }
+        .advisor-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+            flex-shrink: 0;
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .advisor-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            flex-grow: 1;
+            text-align: left;
+        }
+        .advisor-role {
+            font-size: 9px;
+            color: #4facfe;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+        }
+        .team-member {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -125,23 +235,23 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 4px;
             background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
         }
         .member-image {
-            width: 150px;
-            height: 150px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 15px;
-            border: 3px solid rgba(79, 172, 254, 0.5);
+            margin-bottom: 12px;
+            border: 2px solid rgba(79, 172, 254, 0.5);
             transition: transform 0.3s ease;
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
+            font-size: 16px;
             font-weight: bold;
         }
         .member-image.loading {
@@ -155,52 +265,77 @@
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
         }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .bored-ape {
+            position: relative;
+            overflow: hidden;
+        }
+        .bored-ape::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 2s ease-in-out infinite alternate;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(0deg) scale(1); opacity: 0.3; }
+            100% { transform: rotate(180deg) scale(1.2); opacity: 0.1; }
+        }
         .team-member:hover .member-image {
             transform: scale(1.05);
         }
         .member-name {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .member-title {
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 500;
             color: #4facfe;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
         .member-bio {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
         }
         .bio-item {
             display: flex;
             align-items: flex-start;
             background: rgba(79, 172, 254, 0.1);
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 6px;
+            padding: 6px;
             transition: transform 0.3s ease;
         }
         .bio-item:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             background: rgba(79, 172, 254, 0.2);
         }
         .bio-icon {
-            font-size: 16px;
+            font-size: 12px;
             color: #4facfe;
-            margin-right: 8px;
+            margin-right: 6px;
             flex-shrink: 0;
+            margin-top: 1px;
         }
         .bio-text {
-            font-size: 14px;
+            font-size: 11px;
             color: #e0e7ff;
             text-align: left;
             font-weight: 500;
+            line-height: 1.3;
         }
         .linkedin-container {
             display: flex;
@@ -231,14 +366,14 @@
         }
         .tag {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 8px;
+            right: 8px;
             background: rgba(79, 172, 254, 0.2);
             color: #4facfe;
-            font-size: 12px;
+            font-size: 9px;
             font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 15px;
+            padding: 2px 6px;
+            border-radius: 10px;
             text-transform: uppercase;
         }
     </style>
@@ -304,10 +439,16 @@
         </div>
         
         <div class="content">
-            <div class="team-container">
+            <div class="team-section">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Leadership & Expertise
+                </h2>
+            </div>
+            <div class="team-grid">
                 <div class="team-member">
                     <span class="tag">Founder</span>
-                    <img src="https://sfile.chatglm.cn/images-ppt/7d322886cb8f.jpg" alt="Kiran Ravi Kumar" class="member-image" loading="eager" decoding="async">
+                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQHoozzzZexL_Q/profile-displayphoto-scale_200_200/B4EZsPZu2JKUAY-/0/1765489964334?e=1767225600&v=beta&t=Zy7mN0uNjhmoYLujeNmzK0UN1H8FvAJkOFRai3BEwoY" alt="Kiran Ravi Kumar" class="member-image" loading="eager" decoding="async">
                     <h2 class="member-name">Kiran Ravi Kumar</h2>
                     <h3 class="member-title">CEO & Founder</h3>
                     <div class="member-bio">
@@ -328,7 +469,7 @@
                 
                 <div class="team-member">
                     <span class="tag">Operations</span>
-                    <img src="https://sfile.chatglm.cn/images-ppt/b0dec1fc5c52.jpg" alt="Vineeth Vijayprakash" class="member-image" loading="eager" decoding="async">
+                    <img src="/Vineeth V.jpg" alt="Vineeth Vijayprakash" class="member-image" loading="eager" decoding="async">
                     <h2 class="member-name">Vineeth Vijayprakash</h2>
                     <h3 class="member-title">COO</h3>
                     <div class="member-bio">
@@ -348,14 +489,56 @@
                 </div>
                 
                 <div class="team-member">
+                    <span class="tag">Marketing</span>
+                    <img src="https://media.licdn.com/dms/image/v2/D4E03AQFE1fQg_NLExQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1724785438283?e=1767225600&v=beta&t=53LGLDqIKjzCRRHkyQk7hoG7N2HvUm5KC1GbIr-UKGg" alt="Rohith Biju" class="member-image" loading="eager" decoding="async">
+                    <h2 class="member-name">Rohith Biju</h2>
+                    <h3 class="member-title">CMO</h3>
+                    <div class="member-bio">
+                        <div class="bio-item">
+                            <i class="fas fa-bullhorn bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Web3 Marketing</span> & GTM Strategy</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-users bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Community Building</span> & Partnership Development</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-chart-line bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Business Analysis</span> & Market Expansion</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-member">
                     <span class="tag">Technology</span>
-                    <img src="https://sfile.chatglm.cn/images-ppt/85d2b594c8d8.jpeg" alt="Akhil P" class="member-image" loading="eager" decoding="async">
-                    <h2 class="member-name">Akhil P</h2>
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQHN-chSpzALXA/profile-displayphoto-crop_800_800/B56ZoYxX2SHIAI-/0/1761352187743?e=1767225600&v=beta&t=HgRMlqBSB9SAJqZfufxTlm-1kGMqu0FZb3Nr-in5saA" alt="Arjun Angepat" class="member-image" loading="eager" decoding="async">
+                    <h2 class="member-name">Arjun Angepat</h2>
                     <h3 class="member-title">CTO</h3>
                     <div class="member-bio">
                         <div class="bio-item">
+                            <i class="fas fa-cloud bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Cloud Architecture</span> & Data Engineering</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-database bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Scalable ETL Pipelines</span> & Big Data Solutions</span>
+                        </div>
+                        <div class="bio-item">
+                            <i class="fas fa-code-branch bio-icon"></i>
+                            <span class="bio-text"><span class="highlight">Technical Leadership</span> & Platform Innovation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <span class="tag">Co-Founder</span>
+                    <img src="https://media.licdn.com/dms/image/v2/C5603AQGUk-4O-9bEmg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1598211764511?e=1767225600&v=beta&t=2uSVq935yub4-PIZQstnthXwaSJlfRdWb5Lh3jha_xo" alt="Akhil Prasannakumar" class="member-image" loading="eager" decoding="async">
+                    <h2 class="member-name">Akhil Prasannakumar</h2>
+                    <h3 class="member-title">Co-Founder</h3>
+                    <div class="member-bio">
+                        <div class="bio-item">
                             <i class="fas fa-briefcase bio-icon"></i>
-                            <span class="bio-text"><span class="highlight">Software Developer</span> from IIT Madras</span>
+                            <span class="bio-text"><span class="highlight">Co-Founder, Software Developer</span></span>
                         </div>
                         <div class="bio-item">
                             <i class="fas fa-robot bio-icon"></i>
@@ -367,8 +550,37 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="advisors-box">
+                    <h3 class="advisors-title">
+                        <i class="fas fa-user-tie"></i>
+                        Extended Team
+                    </h3>
+                    <div class="advisors-list">
+                        <div class="advisor-item">
+                            <div class="advisor-icon">AP</div>
+                            <span class="advisor-name">Andrew Paizes</span>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-icon">AJ</div>
+                            <span class="advisor-name">Abey Joseph</span>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-icon">KR</div>
+                            <span class="advisor-name">Kishore Ravi</span>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-icon">R</div>
+                            <span class="advisor-name">Rudra</span>
+                        </div>
+                        <div class="advisor-item">
+                            <div class="advisor-icon">HR</div>
+                            <span class="advisor-name">Hiran Ramankutty</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
+
             <div class="linkedin-container">
                 <a href="https://linkedin.com/company/scalix-world" target="_blank" class="linkedin-logo">
                     <i class="fab fa-linkedin-in"></i>
