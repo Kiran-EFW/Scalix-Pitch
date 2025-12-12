@@ -34,10 +34,16 @@ jobs:
           if [ -f "public/presentation-viewer.html" ]; then
             cp public/presentation-viewer.html dist/
           fi
-      # Install firebase-tools via npm for the deployment action (action uses npx)
+      # Install firebase-tools and deploy directly
       - run: npm install -g firebase-tools
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SCALIX_PITCH_DECK }}
-          projectId: scalix-pitch-deck
+      - name: Setup Firebase Service Account
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SCALIX_PITCH_DECK }}' > $HOME/firebase-service-account.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-service-account.json
+      - name: Deploy Preview to Firebase Hosting
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-service-account.json
+        run: firebase hosting:channel:deploy pr-${{ github.event.pull_request.number }} --project scalix-pitch-deck
+      - name: Cleanup
+        if: always()
+        run: rm -f $HOME/firebase-service-account.json
